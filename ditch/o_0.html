@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>On Optimization... — D-itch</title>
+  <!-- Jost (Futura-style geometric sans) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #ffffff; --text: #000000; --muted: #999999;
+      --border: #dddddd; --font: 'Jost', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+    body { background: var(--bg); color: var(--text); font-family: var(--font); line-height: 1.5; -webkit-font-smoothing: antialiased; min-height: 100vh; padding-right: 56px; }
+    a { color: var(--text); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── COVER BANNER ── */
+    .cover-banner {
+      width: 100%;
+      height: 360px;
+      overflow: hidden;
+      margin-bottom: 40px;
+    }
+    .cover-banner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+
+    .music-sidebar {
+      position: absolute;
+      top: 360px;
+      right: 0;
+      width: 56px;
+      height: calc(100vh - 360px);
+      border-left: 1px solid var(--border);
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 32px 0;
+      z-index: 20;
+    }
+
+    .music-label {
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      writing-mode: vertical-rl;
+    }
+
+    .music-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: var(--font);
+      font-size: 12px;
+      color: var(--muted);
+      padding: 0;
+      transition: color 0.15s;
+    }
+
+    .music-btn:hover  { color: var(--text); }
+    .music-btn.playing { color: var(--text); }
+    .play-sym { font-size: 8px; }
+
+    .music-track-info {
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .music-track-name { font-size: 12px; font-style: italic; color: var(--text); }
+    .music-track-artist { font-size: 10px; color: var(--muted); }
+
+    .music-progress-bar {
+      width: 1px;
+      flex: 1;
+      background: var(--border);
+      cursor: pointer;
+      position: relative;
+      margin: 20px 0;
+    }
+
+    .music-progress-fill {
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      background: var(--text);
+      height: 0%;
+      transition: height 0.5s linear;
+    }
+
+    .music-time {
+      font-size: 9px;
+      color: var(--muted);
+      writing-mode: vertical-rl;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: center;
+    }
+
+    /* ── HEADER ── */
+    .site-header { padding: 48px 40px 40px; border-bottom: 1px solid var(--text); }
+    .site-name { font-size: clamp(64px, 10vw, 120px); font-weight: 400; letter-spacing: -0.03em; line-height: 0.9; display: block; margin-bottom: 16px; }
+    .site-tagline { font-size: 13px; color: var(--muted); letter-spacing: 0.04em; }
+
+    /* ── LAYOUT ── */
+    .body-grid { display: grid; grid-template-columns: 1fr 4fr; min-height: calc(100vh - 200px); }
+
+    /* ── SIDEBAR ── */
+    .sidebar { border-right: 1px solid var(--border); padding: 40px 24px; display: flex; flex-direction: column; gap: 4px; }
+    .sidebar-section { margin-bottom: 28px; }
+    .sidebar-label { font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; display: block; }
+    .sidebar-link { display: block; font-size: 13px; color: var(--text); padding: 4px 0; text-decoration: none; transition: color 0.15s; }
+    .sidebar-link:hover { color: var(--muted); text-decoration: none; }
+    .sidebar-foot { margin-top: auto; font-size: 10px; color: var(--muted); line-height: 1.8; }
+
+    /* ── CONTENT ── */
+    .content { padding: 64px 80px 120px; max-width: 860px; }
+    .back-link { font-size: 11px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; display: inline-block; margin-bottom: 48px; }
+    .back-link:hover { color: var(--text); text-decoration: none; }
+    .article-tag { font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; display: block; }
+    .article-title { font-size: clamp(28px, 4vw, 52px); font-weight: 400; letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 24px; }
+    .article-meta { font-size: 12px; color: var(--muted); display: flex; gap: 20px; padding-bottom: 32px; border-bottom: 1px solid var(--border); margin-bottom: 0; }
+
+    /* ── RIGHT-FLOAT IMAGE ── */
+    .right-figure {
+      float: right;
+      margin: 0 0 28px 40px;
+      max-width: 65%;
+    }
+
+    .right-figure img {
+      display: block;
+      width: auto;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .right-figure figcaption {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 7px;
+      line-height: 1.6;
+    }
+
+    .right-figure figcaption a { color: var(--muted); }
+    .right-figure figcaption a:hover { color: var(--text); }
+
+    /* clear floats at end of article body */
+    .article-body::after {
+      content: '';
+      display: table;
+      clear: both;
+    }
+
+    /* ── ARTICLE BODY ── */
+    .article-body { max-width: 640px; }
+
+    .article-body p {
+      font-size: 15px;
+      line-height: 1.9;
+      color: var(--text);
+      margin-bottom: 26px;
+    }
+
+    .article-body em { font-style: italic; }
+
+    .article-body strong {
+      font-weight: 500;
+    }
+
+    /* Section divider */
+    .article-body hr {
+      border: none;
+      border-top: 0.5px solid var(--border);
+      margin: 44px 0;
+    }
+
+    /* Blockquotes */
+    .article-body blockquote {
+      margin: 32px 0;
+      padding: 0 0 0 20px;
+      border-left: 1px solid var(--text);
+    }
+
+    .article-body blockquote p {
+      font-size: 14px;
+      font-style: italic;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .article-body blockquote cite {
+      font-size: 11px;
+      color: var(--muted);
+      font-style: normal;
+      display: block;
+    }
+
+    /* Footnote markers */
+    .fn {
+      font-size: 9px;
+      vertical-align: super;
+      line-height: 0;
+      color: var(--muted);
+      text-decoration: none;
+      margin-left: 1px;
+    }
+
+    .fn:hover { color: var(--text); }
+
+    /* ── INLINE FIGURE (masque) ── */
+    .inline-figure {
+      margin: 36px 0;
+    }
+
+    .inline-figure img {
+      display: block;
+      width: auto;
+      max-width: 100%;
+      height: auto;
+      border: 1px solid var(--border);
+    }
+
+    .inline-figure figcaption {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 7px;
+      line-height: 1.6;
+    }
+
+    .inline-figure figcaption a { color: var(--muted); }
+    .inline-figure figcaption a:hover { color: var(--text); }
+
+    /* ── INSTAGRAM EMBED BOX ── */
+    .instagram-embed {
+      margin: 32px 0;
+      border: 1px solid var(--border);
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .instagram-embed svg { width: 18px; height: 18px; flex-shrink: 0; color: var(--muted); }
+
+    .instagram-embed p {
+      font-size: 12px;
+      color: var(--muted);
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    .instagram-embed a {
+      color: var(--text);
+      font-size: 11px;
+      display: block;
+      margin-top: 3px;
+    }
+
+    /* ── REFERENCES ── */
+    .references {
+      margin-top: 64px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+      max-width: 640px;
+    }
+
+    .references-heading {
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .ref-list { list-style: none; }
+
+    .ref-item {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 10px;
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .ref-num { flex-shrink: 0; min-width: 36px; color: var(--muted); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 700px) {
+      .body-grid { grid-template-columns: 1fr; }
+      .sidebar { border-right: none; border-bottom: 1px solid var(--border); flex-direction: row; flex-wrap: wrap; gap: 16px; padding: 20px 24px; }
+      .sidebar-section { margin-bottom: 0; }
+      .sidebar-foot { display: none; }
+      .content { padding: 32px 24px 80px; }
+      .hero-image { width: calc(100% + 48px); margin-left: -24px; margin-right: -24px; }
+      .music-sidebar { display: none; }
+      body { padding-right: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── VERTICAL MUSIC SIDEBAR ── -->
+<div class="music-sidebar">
+  <span class="music-label">Listening</span>
+  <audio id="audio" src="audio/nancarrow.mp3"></audio>
+  <div class="music-progress-bar" id="prog" onclick="seek(event)">
+    <div class="music-progress-fill" id="fill"></div>
+  </div>
+  <div class="music-track-info">
+    <span class="music-track-name">Studies for Player Piano</span>
+    <span class="music-track-artist">Conlon Nancarrow</span>
+  </div>
+  <div class="music-time">
+    <span id="time">0:00</span>
+    <span>14:22</span>
+  </div>
+  <button class="music-btn" id="mbtn" onclick="togglePlay()">
+    <span class="play-sym" id="msym">▶</span>
+  </button>
+</div>
+
+<header class="site-header">
+  <a href="index.html"><span class="site-name">D-itch</span></a>
+  <span class="site-tagline">Montréal &amp; Glasgow</span>
+</header>
+
+<div class="body-grid">
+
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <span class="sidebar-label">Navigate</span>
+      <a class="sidebar-link" href="index.html">Home</a>
+      <a class="sidebar-link" href="#">Archive</a>
+    </div>
+    <div class="sidebar-section">
+      <span class="sidebar-label">Listen</span>
+      <a class="sidebar-link" href="#">Music</a>
+      <a class="sidebar-link" href="#">Playlists</a>
+    </div>
+    <div class="sidebar-section">
+      <span class="sidebar-label">About</span>
+      <a class="sidebar-link" href="about.html">About/Contact</a>
+      <a class="sidebar-link" href="#">Submit</a>
+    </div>
+    <div class="sidebar-foot">Issue I<br>May 2026</div>
+  </aside>
+
+  <main class="content">
+
+    <figure class="cover-banner">
+      <img src="images/oo/train.png" alt="On Optimization...">
+    </figure>
+
+    <h1 class="article-title">On Optimization...</h1>
+    <div class="article-meta">
+      <span>Antoine Habib</span>
+      <span>May 2026</span>
+    </div>
+
+    <div class="article-body">
+
+      <!-- ── IMAGE — floats right alongside text ── -->
+      <figure class="right-figure">
+        <img src="images/oo/train.png" alt="On Optimization...">
+        <figcaption>
+          Photo: <a href="https://www.instagram.com/noechaba/" target="_blank" rel="noopener">@noechaba</a>
+        </figcaption>
+      </figure>
+
+      <!-- ── PARAGRAPH 1 ── -->
+      <p>
+        Many texts have been written on cybernetics. For our purposes I only wish to state
+        that in its original conception, cybernetics was conceived as a practice of understanding
+        feedback for the sake of control. More formally, cybernetics conceives «biological,
+        physical, and social behaviours as something integrally programmed and re-programmable.
+        It conceives of each individual behaviour as something "piloted," by the need for the
+        survival of a "system" that makes it possible, and which it must contribute to. It is a
+        way of thinking about balance, born in a crisis context».<a href="#fn1" class="fn">[1]</a>
+        The goal is then to reach a state of metastasis, where probability is obsolete. Developed
+        by Wiener for military purposes, the applications became truly endless. The rationale of
+        the method has spread so successfully we no longer have a need for the discipline itself
+        as its will is carried out by the underlings. Quantitative finance, optimal control
+        theory, and biocybernetics are the first examples that come to mind.
+      </p>
+
+      <!-- ── PARAGRAPH 2 ── -->
+      <p>
+        The following essay is not an attempt at tracking the history of this practice, rather
+        to discuss what the miming cybernetician's vision of the future looks like.
+        For them — of us and for us.
+      </p>
+
+      <!-- ── PARAGRAPH 3 ── -->
+      <p>
+        For the model to be built, we must have <em>data</em>. Representations of ourselves,
+        of that which has built and been built by us. Exhaustive analytics are all but
+        facultative. In this series we previously introduced
+        <em><a href="odc.html">Dataism</a></em>(Organs of a Digitized Society, Osborne). Those who extract and
+        manipulate abstractions of the Truth are to blame. Well — blame… maybe they are to
+        correct? Its pervasiveness makes this sound innocuous. One may retort: "The data is
+        there, why not take advantage of it"? To them I say: maybe we ought to question why
+        the machinery for such data extraction exists in the first place! Our favourite
+        overlords may try to convince us that this just so happens to be a convenient
+        coincidence — a happy accident — a <em>byproduct</em>. I would be more inclined to
+        believe them if I did not see the dollar signs in their eyes or the fangs
+        in their smiles.
+      </p>
+
+      <!-- ── PARAGRAPH 4 ── -->
+      <p>
+        The difference between the general notions of improvement and Optimization is essential.
+        Let us avoid overindulging in the linguistic gymnastics at play. Here, the notion of
+        improvement is one which we may loosely define as benefiting the interest of the people
+        as they <em>really</em> are. Optimization serves only the neutered version —
+        the <strong>Yōu</strong><a href="#fn1" class="fn">[1]</a> — and the people who envision
+        us as such. The predictable consumer; the perfect Amazon client. For instance, when
+        people discuss improving the medical system by developing theoretically perfect machines,
+        virtually incapable of botching a surgery, the patient's body is not reduced to an
+        imaginary understanding of what it needs. This can never be analogous to the
+        optimization of, say, an actuarial algorithm assessing financial risk that understands
+        you as a time series.
+      </p>
+
+      <!-- ── INLINE IMAGE after 4th paragraph ── -->
+      <figure class="inline-figure">
+        <img src="images/oo/masque.png" alt="Masque">
+        <figcaption>
+          Photo: <a href="https://www.instagram.com/noechaba/" target="_blank" rel="noopener">@noechaba</a>
+        </figcaption>
+      </figure>
+
+      <!-- ── PARAGRAPH 5 ── -->
+      <p>
+        Let us take the cybernetician's vision to the end of its own logic — the aforementioned
+        metastasis. People act as agents of perfect rationality, the beautifully termed
+        <em>homo economicus</em>. Of course, our rationality's bible will only have further been
+        sculpted by the opaque hand of the accumulators. A sculpture so precise that
+        <strong>Yōu</strong> become. Being is binary and choice is no longer even an illusion.
+        Oh the angst! Their perfect you is entirely reducible to their tools for measuring you.
+        That is the dream — the best citizens in the smartest city. True Nirvana may be reached
+        when we are no longer able to distinguish beings for the qualities used to assess
+        contributions to the metastasis' order.
+      </p>
+
+      <!-- ── PARAGRAPH 6 ── -->
+      <p>
+        In the late 1990s, Warwick's CCRU — freshly galvanized by the efforts of the two
+        superstars of French philosophy some decades
+        earlier<a href="#fndg" class="fn">[D&amp;G]</a> — created the fertile ground for the
+        ideas of Fisher, Land, and Plant, who actually seems to have grown from said soil. Many
+        of you may know Land as one amongst other intellectual <em>titans</em> such as my
+        favourite peptidian, Curtis Yarvin. I won't even honour their self-professed ideology
+        by its chosen name. For our sake, I'd rather refer to their ideology as
+        right accelerationism.
+      </p>
+
+      <!-- ── PARAGRAPH 7 ── -->
+      <p>
+        Loosely, I would describe the CCRU and those affiliated as focusing their efforts on
+        studying — and showcasing — the way revolutionary and youth culture, after the period
+        of unrest in the 1960s and '70s, was "melted"<a href="#fnland" class="fn">[Land, 1994]</a>
+        into the economy. From Land's 1994 text <em>Meltdown</em>:
+      </p>
+
+      <blockquote>
+        <p>
+          "The postmodern meltdown of culture into the economy is triggered by the fractal
+          interlock of commoditization and computers: a transscalar entropy-dissipation from
+          international trade to market-oriented software that thaws out competitive dynamics
+          from the cryonics-bank of modernist corporatism. Commerce re-implements space inside
+          itself, assembling a universe exhaustively immanent to cybercapital functionality.
+          Neoclassical (equilibrium) economics is subsumed into computer-based nonequilibrium
+          market escalations, themed by artificial agencies, imperfect information, sub-optimal
+          solutions, lock-in, increasing returns, and convergence. As digitally micro-tuned
+          market metaprograms mesh with technoscientific soft engineering positive nonlinearity
+          rages through the machines. Cyclonic torsion moans."
+        </p>
+        <cite>— Nick Land, <em>Meltdown</em>, 1994</cite>
+      </blockquote>
+
+      <!-- ── PARAGRAPH 8 ── -->
+      <p>
+        I chose this passage because I like it, but also because texts like these were signs of
+        eventual discord within the CCRU. Incorporate a bit of religious nihilism and you have
+        a recipe for the thinker you may know today.
+      </p>
+
+      <!-- VICE Instagram post -->
+      <div class="instagram-embed">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="2" y="2" width="20" height="20" rx="5"/>
+          <circle cx="12" cy="12" r="4"/>
+          <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/>
+        </svg>
+        <p>
+          VICE Instagram — on Nick Land and the CCRU
+          <a href="https://www.instagram.com/p/DUtInjkEvNH/" target="_blank" rel="noopener">
+            instagram.com/p/DUtInjkEvNH
+          </a>
+        </p>
+      </div>
+
+      <!-- ── PARAGRAPH 9 ── -->
+      <p>
+        The CCRU deemed cybernetics the principle mechanism through which to understand and
+        incite change — likely in the aftermath of '68. By drawing on the notion of runaway
+        processes attributable to D&amp;G and developing an appreciation for the occult and
+        figures such as H.P. Lovecraft, they sought to create cultural modes of recursion
+        destined to implode when implanted in a faulty system. D&amp;G's <em>lines of flight</em>
+        were a more open-ended, esoteric formulation of this.
+      </p>
+
+      <!-- ── PARAGRAPH 10 ── -->
+      <p>
+        The fourth part of Tiqqun's text draws upon Wittgenstein and Keynes to argue that it
+        is precisely the trust we place in institutions, through the language we have adopted,
+        that has allowed for the disproportionate growth rate of intangible labour to fit the
+        current capitalist cybernetic project. The perceived value of accumulated information
+        is worth immeasurably more than your browser history. Hence, by necessity, we have
+        entered a paradigm of insecurity contrary to its predecessors, which functioned through
+        scarcity.<a href="#fntiqqun" class="fn">[Tiqqun]</a>
+      </p>
+
+      <blockquote>
+        <p>
+          "The control and communications sectors develop because commodity valorization needs
+          to have a looping circulation of information parallel to the actual circulation of
+          commodities, the production of a collective belief that objectivizes itself in values."
+        </p>
+        <cite>— Tiqqun, <em>The Cybernetic Hypothesis</em></cite>
+      </blockquote>
+
+      <!-- ── PARAGRAPH 11 ── -->
+      <p>
+        By circularly validating our need for more methods of control which require machinery,
+        data, and energy — implementation introduces more variability. Seek to control it and
+        in doing so we enter a new iteration. Each time more demanding.
+      </p>
+
+      <hr>
+
+      <!-- ── PARAGRAPH 12 ── -->
+      <p>
+        Mathematics and formal logic have played a part in this story. Bertrand Russell was
+        among the first sceptics<a href="#fnrussell" class="fn">[Russell, 1902]</a> and later
+        Kurt Gödel mathematically proved the incompleteness of any formal
+        system.<a href="#fngodel" class="fn">[Gödel, 1931]</a> We know that <em>a closed system
+        cannot express the truth about itself</em> — it cannot be logically total. This had the
+        most profound epistemological implications. Consider the mission of disciplines such as
+        psychology or physics. Conversely, God's power is the ineffable. But the church failed
+        when the first brick was laid, and the best Marxist is the one who does not leave their
+        house. This is not to dismiss the value of narratives in our lives as "containers of
+        negativity" — an essential metabolic function. In fact, acceptance of grand narratives
+        is the ultimate resignation to logical boundedness.
+      </p>
+
+      <!-- ── PARAGRAPH 13 ── -->
+      <p>
+        Capitalism is obviously not a complete system. It cannot prove the fundamental axioms
+        upon which it relies, such as preference or commensurability. Notably, as Tiqqun
+        expresses in the <em>Cybernetic Hypothesis</em>, Keynes was able to show that after
+        the 1929 crisis, capitalism could be stuck in
+        disequilibrium.<a href="#fntiqqun" class="fn">[Tiqqun]</a> When Hayekian technocrats
+        present market dynamics as neutral vehicles for the expression of pre-existing truth,
+        they wilfully ignore the fact that these truths are produced by the very mechanics they
+        claim to be scientifically describing.
+      </p>
+
+      <!-- ── PARAGRAPH 14 ── -->
+      <p>
+        As previously discussed, cybernetics as the study of loops and deviation posits an
+        inherent implementation of failure. Drawing on Byung-chul Han's "achievement society"
+        from <em>The Burnout Society</em> — characterised by its ever-compromising ability to
+        "Can," a submission to bureaucratic will, or in other words the refusal to negate —
+        although it may seem contradictory to the cybernetician's study, we will attempt to
+        convince you otherwise. Formally, we can view this new neoliberal imperative as one
+        which establishes the structures through which negativity is captured. Productive, or
+        functional failure, ascribed to market logic is cyclically implemented while the
+        potentially disruptive is discarded. But the most proficient cybernetician is a hoarder.
+      </p>
+
+      <!-- ── PARAGRAPH 15 ── -->
+      <p>
+        Cultural depreciation is a cyclical consequence of a system that can only ever reproduce
+        itself through its existing categories. The cyberneticians are all too aware of this.
+        It is of no coincidence that most of the efforts in the arts and culture industry today
+        work towards the extension of these categories, refining capture mechanics. Yet,
+        incessant expansion of the state of balance renders it more porous. Implementing a wider
+        variety of stabilizing artefacts necessarily provokes higher degrees of contradiction.
+        <em>The optics become terrible!</em>
+      </p>
+
+      <!-- ── PARAGRAPH 16 ── -->
+      <p>
+        The ubiquity of critique afforded to all by identity apparatus from the eighties onwards
+        flattened the value of good criticism. Furthermore, the quality of criticism is too often
+        confused for the qualities associated with those publicizing their opinion. To omit
+        discussion of the object in question relative to its culturally dominant context results
+        in vacuous talk.
+      </p>
+
+      <!-- ── CONCLUDING PARAGRAPH ── -->
+      <p>
+        To conclude, I'd like to say that I find there is solace to be had in the early nihilism
+        of Land's work. The kind which evokes a dehumanization of the historical process.
+        Whatever we are becoming is fundamentally arbitrary. The reader may feel a sense of dread
+        after our discussion on the engineering of our social moments. I wish to end this piece
+        simply by stating that there is no Singularity. There will never be. We may see a
+        deceleration in our abilities to relate to the thing you and I cherish, but never can it
+        be eradicated. Zero is inhuman. The Cybernetic project is still a human project.
+        And thus will fail.
+      </p>
+
+    </div>
+
+    <!-- ── REFERENCES ── -->
+    <div class="references">
+      <span class="references-heading">References</span>
+      <ul class="ref-list">
+        <li class="ref-item" id="fn1">
+          <span class="ref-num">[1]</span>
+          <span>Tiqqun. (2010). <em>The cybernetic hypothesis</em> (Anonymous, Trans.). Ill Will Editions. (Original work published 2001)</span>
+        </li>
+        <li class="ref-item" id="fntiqqun">
+          <span class="ref-num">[Tiqqun]</span>
+          <span>Tiqqun. (2010). <em>The cybernetic hypothesis</em> (Anonymous, Trans.). Ill Will Editions. (Original work published 2001)</span>
+        </li>
+        <li class="ref-item" id="fnland">
+          <span class="ref-num">[Land, 1994]</span>
+          <span>Land, N. (2011). Meltdown. In R. Mackay &amp; R. Brassier (Eds.), <em>Fanged noumena: Collected writings 1987–2007</em> (pp. 441–459). Urbanomic. (Original work published 1994)</span>
+        </li>
+        <li class="ref-item" id="fndg">
+          <span class="ref-num">[D&amp;G]</span>
+          <span>Deleuze, G., &amp; Guattari, F. (1987). <em>A thousand plateaus: Capitalism and schizophrenia</em> (B. Massumi, Trans.). University of Minnesota Press. (Original work published 1980)</span>
+        </li>
+        <li class="ref-item" id="fnrussell">
+          <span class="ref-num">[Russell, 1902]</span>
+          <span>Russell, B. Letter to Gottlob Frege, June 16, 1902.</span>
+        </li>
+        <li class="ref-item" id="fngodel">
+          <span class="ref-num">[Gödel, 1931]</span>
+          <span>Gödel, K. (1931). Über formal unentscheidbare Sätze der Principia Mathematica und verwandter Systeme I. <em>Monatshefte für Mathematik und Physik</em>, 38, 173–198.</span>
+        </li>
+      </ul>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  const DURATION = 862;
+  let isPlaying = false, elapsed = 0, interval;
+
+  const PAUSE = '■';
+  const PLAY  = '▶';
+
+  function togglePlay() {
+    const audio = document.getElementById('audio');
+    const sym   = document.getElementById('msym');
+    const btn   = document.getElementById('mbtn');
+
+    if (isPlaying) {
+      isPlaying = false;
+      clearInterval(interval);
+      sym.textContent = PLAY;
+      btn.classList.remove('playing');
+      if (!audio.paused) audio.pause();
+    } else {
+      isPlaying = true;
+      sym.textContent = PAUSE;
+      btn.classList.add('playing');
+      if (audio.src && !audio.src.endsWith('/')) audio.play().catch(() => {});
+      interval = setInterval(() => {
+        elapsed = Math.min(elapsed + 1, DURATION);
+        document.getElementById('fill').style.height = (elapsed / DURATION * 100) + '%';
+        document.getElementById('time').textContent = fmt(elapsed);
+        if (elapsed >= DURATION) togglePlay();
+      }, 1000);
+    }
+  }
+
+  function seek(e) {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const pct = 1 - ((e.clientY - rect.top) / rect.height);
+    elapsed = Math.floor(Math.max(0, Math.min(1, pct)) * DURATION);
+    document.getElementById('fill').style.height = (Math.max(0, Math.min(1, pct)) * 100) + '%';
+    document.getElementById('time').textContent = fmt(elapsed);
+    const audio = document.getElementById('audio');
+    if (audio.src && !audio.src.endsWith('/')) audio.currentTime = elapsed;
+  }
+
+  function fmt(s) {
+    const m = Math.floor(s / 60), sec = s % 60;
+    return m + ':' + (sec < 10 ? '0' : '') + sec;
+  }
+</script>
+
+</body>
+</html>

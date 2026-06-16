@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>D-itch</title>
+  <!-- Favicon -->
+<link rel="icon" type="image/x-icon" href="favicon/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
+  <!-- Jost (Futura-style geometric sans) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #ffffff;
+      --text:    #000000;
+      --muted:   #999999;
+      --border:  #dddddd;
+      --font:    'Jost', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    a { color: var(--text); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ════════════════════════════════════
+       HEADER — full width, large
+    ════════════════════════════════════ */
+    .site-header {
+      padding: 48px 40px 40px;
+      border-bottom: 1px solid var(--text);
+    }
+
+    .site-name {
+      font-size: clamp(64px, 10vw, 120px);
+      font-weight: 400;
+      letter-spacing: -0.03em;
+      line-height: 0.9;
+      display: block;
+      margin-bottom: 16px;
+    }
+
+    .site-tagline {
+      font-size: 13px;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+
+    /* ════════════════════════════════════
+       BODY — sidebar left + content right
+    ════════════════════════════════════ */
+    .body-grid {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      min-height: calc(100vh - 200px);
+    }
+
+    /* ── LEFT SIDEBAR ── */
+    .sidebar {
+      border-right: 1px solid var(--border);
+      padding: 40px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .sidebar-section {
+      margin-bottom: 28px;
+    }
+
+    .sidebar-label {
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .sidebar-link {
+      display: block;
+      font-size: 13px;
+      color: var(--text);
+      padding: 4px 0;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .sidebar-link:hover {
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .sidebar-link.active {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    /* sidebar footer — pushed to bottom */
+    .sidebar-foot {
+      margin-top: auto;
+      font-size: 10px;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    /* ── RIGHT CONTENT ── */
+    .content {
+      padding: 40px 40px 80px;
+    }
+
+    .contents-label {
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    /* ── ARTICLE ROWS ── */
+    .article-list {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+
+    .article-card {
+      position: relative;
+      width: 100%;
+      min-height: 280px;
+      overflow: hidden;
+      border: none;
+      transition: opacity 0.25s;
+      cursor: pointer;
+    }
+
+    .article-card:hover { opacity: 0.92; }
+
+    /* Image fills entire row as background */
+    .article-image {
+      position: absolute;
+      inset: 0;
+    }
+
+    .article-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      transition: transform 0.5s ease;
+    }
+
+    .article-card:hover .article-image img { transform: scale(1.02); }
+
+    /* Text overlay — gradient from transparent to white at bottom */
+    .article-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 80px 28px 24px;
+      background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        rgba(255,255,255,0.88) 42%,
+        rgba(255,255,255,0.98) 62%
+      );
+    }
+
+    .article-num {
+      font-size: 9px;
+      color: var(--muted);
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .article-title {
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.25;
+      margin-bottom: 4px;
+      display: block;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .article-title:hover { text-decoration: underline; }
+
+    .article-author {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .article-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .article-tag {
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+
+    .article-tag::before { content: '—'; margin-right: 3px; }
+
+    /* Foot row */
+    .article-foot {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      border-top: 1px solid rgba(0,0,0,0.1);
+      padding-top: 12px;
+      margin-top: 16px;
+    }
+
+    .read-link {
+      font-size: 11px;
+      color: var(--muted);
+      margin-left: auto;
+    }
+
+    .read-link:hover { color: var(--text); text-decoration: underline; }
+
+    .read-time {
+      font-size: 9px;
+      color: var(--muted);
+    }
+
+    /* ── MUSIC PLAYER ── */
+    .music-row {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .music-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: var(--font);
+      font-size: 11px;
+      color: var(--muted);
+      padding: 0;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: color 0.15s;
+    }
+
+    .music-btn:hover   { color: var(--text); }
+    .music-btn.playing { color: var(--text); }
+    .music-btn .play-sym { font-size: 8px; }
+
+    .music-progress {
+      width: 40px;
+      height: 1px;
+      background: var(--border);
+      display: none;
+      position: relative;
+    }
+
+    .music-progress.visible { display: block; }
+
+    .music-progress-fill {
+      position: absolute;
+      inset: 0;
+      background: var(--text);
+      width: 0%;
+      transition: width 0.5s linear;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .article-card { min-height: 220px; }
+    }
+
+    @media (max-width: 700px) {
+      .body-grid { grid-template-columns: 1fr; }
+      .sidebar   { border-right: none; border-bottom: 1px solid var(--border); flex-direction: row; flex-wrap: wrap; gap: 16px; padding: 20px 24px; }
+      .sidebar-section { margin-bottom: 0; }
+      .sidebar-foot { display: none; }
+      .content   { padding: 24px; }
+      .article-list { gap: 24px; }
+      .article-card { min-height: 200px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════ HEADER ════ -->
+<header class="site-header">
+  <span class="site-name">D-itch</span>
+  <span class="site-tagline"> Montréal & Glasgow</span>
+</header>
+
+<!-- ════ BODY ════ -->
+<div class="body-grid">
+
+  <!-- ── LEFT SIDEBAR ── -->
+  <aside class="sidebar">
+
+    <div class="sidebar-section">
+      <span class="sidebar-label">Navigate</span>
+      <a class="sidebar-link active" href="index.html">Home</a>
+      <a class="sidebar-link" href="#">Archive</a>
+    </div>
+
+    <div class="sidebar-section">
+      <span class="sidebar-label">Listen</span>
+      <a class="sidebar-link" href="#">Music</a>
+      <a class="sidebar-link" href="#">Playlists</a>
+    </div>
+
+    <div class="sidebar-section">
+      <span class="sidebar-label">About</span>
+      <a class="sidebar-link" href="about.html">About/Contact</a>
+      <a class="sidebar-link" href="#">Submit</a>
+    </div>
+
+    <div class="sidebar-foot">
+      Issue I<br>
+      May 2026
+    </div>
+
+  </aside>
+
+  <!-- ── RIGHT CONTENT ── -->
+  <main class="content">
+
+    <span class="contents-label">Essays</span>
+
+    <div class="article-list">
+
+      <!-- ARTICLE 1 -->
+      <div class="article-card">
+        <a class="article-image" href="o_0.html">
+          <img src="images/oo/train.png" alt="On Optimization...">
+        </a>
+        <div class="article-overlay">
+          <span class="article-num">01</span>
+          <a class="article-title" href="o_0.html">On Optimization...</a>
+          <div class="article-author">Antoine Habib</div>
+          <div class="article-foot">
+            <div class="music-row">
+              <audio id="audio1" src="audio/nancarrow.mp3"></audio>
+              <button class="music-btn" id="mbtn1" onclick="toggleMusic(1,862)">
+                <span class="play-sym" id="msym1">▶</span>
+                <span>Nancarrow</span>
+              </button>
+              <div class="music-progress" id="mprog1">
+                <div class="music-progress-fill" id="mfill1"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ARTICLE 2 -->
+      <div class="article-card">
+        <a class="article-image" href="odc.html">
+          <img src="images/odc/banner.png" alt="Organs of Digitized Society">
+        </a>
+        <div class="article-overlay">
+          <span class="article-num">02</span>
+          <a class="article-title" href="odc.html">Organs of Digitized Society</a>
+          <div class="article-author">François Osborne</div>
+          <div class="article-foot">
+            <div class="music-row">
+              <audio id="audio2" src="audio/eno-discreet.mp3"></audio>
+              <button class="music-btn" id="mbtn2" onclick="toggleMusic(2,1864)">
+                <span class="play-sym" id="msym2">▶</span>
+                <span>Brian Eno</span>
+              </button>
+              <div class="music-progress" id="mprog2">
+                <div class="music-progress-fill" id="mfill2"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+</div>
+
+<script>
+  const state = {}, intervals = {}, elapsed = {};
+
+  function toggleMusic(n, duration) {
+    const audio = document.getElementById('audio'  + n);
+    const btn   = document.getElementById('mbtn'   + n);
+    const sym   = document.getElementById('msym'   + n);
+    const prog  = document.getElementById('mprog'  + n);
+    const fill  = document.getElementById('mfill'  + n);
+
+    [1,2].filter(x => x !== n).forEach(k => { if (state[k]) stopMusic(k); });
+
+    if (state[n]) {
+      stopMusic(n);
+    } else {
+      state[n] = true;
+      btn.classList.add('playing');
+      sym.textContent = '■';
+      prog.classList.add('visible');
+      if (!elapsed[n]) elapsed[n] = 0;
+      if (audio.src && !audio.src.endsWith('/')) audio.play().catch(() => {});
+      intervals[n] = setInterval(() => {
+        elapsed[n] = Math.min((elapsed[n] || 0) + 1, duration);
+        fill.style.width = ((elapsed[n] / duration) * 100) + '%';
+        if (elapsed[n] >= duration) stopMusic(n);
+      }, 1000);
+    }
+  }
+
+  function stopMusic(n) {
+    state[n] = false;
+    clearInterval(intervals[n]);
+    const btn  = document.getElementById('mbtn'  + n);
+    const sym  = document.getElementById('msym'  + n);
+    const audio = document.getElementById('audio' + n);
+    btn.classList.remove('playing');
+    sym.textContent = '▶';
+    if (audio && !audio.paused) audio.pause();
+  }
+</script>
+
+</body>
+</html>

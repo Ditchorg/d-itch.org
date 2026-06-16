@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About / Contact — D-itch</title>
+  <!-- Favicon -->
+<link rel="icon" type="image/x-icon" href="favicon/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
+  <!-- Jost (Futura-style geometric sans) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #ffffff;
+      --text:    #000000;
+      --muted:   #999999;
+      --border:  #dddddd;
+      --font:    'Jost', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    a { color: var(--text); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── SITE HEADER ── */
+    .site-header {
+      padding: 48px 40px 40px;
+      border-bottom: 1px solid var(--text);
+    }
+
+    .site-name {
+      font-size: clamp(64px, 10vw, 120px);
+      font-weight: 400;
+      letter-spacing: -0.03em;
+      line-height: 0.9;
+      display: block;
+      margin-bottom: 16px;
+    }
+
+    .site-tagline {
+      font-size: 13px;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+
+    /* ── BODY GRID ── */
+    .body-grid {
+      display: grid;
+      grid-template-columns: 1fr 4fr;
+      min-height: calc(100vh - 200px);
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      border-right: 1px solid var(--border);
+      padding: 40px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .sidebar-section { margin-bottom: 28px; }
+
+    .sidebar-label {
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .sidebar-link {
+      display: block;
+      font-size: 13px;
+      color: var(--text);
+      padding: 4px 0;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .sidebar-link:hover { color: var(--muted); text-decoration: none; }
+    .sidebar-link.active { font-weight: 500; }
+
+    .sidebar-foot {
+      margin-top: auto;
+      font-size: 10px;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    /* ── MAIN CONTENT ── */
+    .content {
+      padding: 48px 72px 120px;
+    }
+
+    .article-title {
+      font-size: clamp(28px, 4vw, 52px);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 24px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ── ARTICLE BODY ── */
+    .article-body {
+      max-width: 640px;
+      font-size: 15px;
+      line-height: 1.85;
+      margin-top: 40px;
+    }
+
+    .article-body p { margin-bottom: 24px; color: var(--text); }
+    .article-body em { font-style: italic; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 700px) {
+      .body-grid { grid-template-columns: 1fr; }
+      .sidebar { border-right: none; border-bottom: 1px solid var(--border); flex-direction: row; flex-wrap: wrap; gap: 16px; padding: 20px 24px; }
+      .sidebar-section { margin-bottom: 0; }
+      .sidebar-foot { display: none; }
+      .content { padding: 32px 24px 80px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header class="site-header">
+  <a href="index.html"><span class="site-name">D-itch</span></a>
+  <span class="site-tagline">Montréal &amp; Glasgow</span>
+</header>
+
+<div class="body-grid">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <span class="sidebar-label">Navigate</span>
+      <a class="sidebar-link" href="index.html">Home</a>
+      <a class="sidebar-link" href="#">Archive</a>
+    </div>
+    <div class="sidebar-section">
+      <span class="sidebar-label">Listen</span>
+      <a class="sidebar-link" href="#">Music</a>
+      <a class="sidebar-link" href="#">Playlists</a>
+    </div>
+    <div class="sidebar-section">
+      <span class="sidebar-label">About</span>
+      <a class="sidebar-link active" href="about.html">About/Contact</a>
+    </div>
+    <div class="sidebar-foot">Issue I<br>May 2026</div>
+  </aside>
+
+  <!-- ── CONTENT ── -->
+  <main class="content">
+
+    <h1 class="article-title">About / Contact</h1>
+
+    <div class="article-body">
+      <p>
+        D-itch is a collective effort to put forth discussions on contemporary topics relating
+        to technology, surveillance, cultural theory and other adjacent topics. Currently
+        composed of Antoine Habib and François Osborne. Both pursuing higher education in
+        applied mathematics at the Polytechnique of Montreal and plasma physics at the
+        University of Glasgow, respectively.
+      </p>
+
+      <p>
+        Contributions to the project are always welcomed, be they writing, visual media,
+        auditive pieces or any other form relevant to the topics discussed.
+      </p>
+
+      <p>
+        For any inquiries please contact:
+        <a href="mailto:digital.itch@outlook.com">digital.itch@outlook.com</a>.
+      </p>
+    </div>
+
+  </main>
+</div>
+
+</body>
+</html>

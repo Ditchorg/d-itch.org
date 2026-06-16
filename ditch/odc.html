@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Organs of a Digitized Society — D-itch</title>
+  <!-- Favicon -->
+<link rel="icon" type="image/x-icon" href="favicon/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
+  <!-- Jost (Futura-style geometric sans) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #ffffff;
+      --text:    #000000;
+      --muted:   #999999;
+      --border:  #dddddd;
+      --font:    'Jost', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    a { color: var(--text); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── SITE HEADER ── */
+    .site-header {
+      padding: 48px 40px 40px;
+      border-bottom: 1px solid var(--text);
+    }
+
+    .site-name {
+      font-size: clamp(64px, 10vw, 120px);
+      font-weight: 400;
+      letter-spacing: -0.03em;
+      line-height: 0.9;
+      display: block;
+      margin-bottom: 16px;
+    }
+
+    .site-tagline {
+      font-size: 13px;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+
+    /* ── BODY GRID ── */
+    .body-grid {
+      display: grid;
+      grid-template-columns: 1fr 4fr;
+      min-height: calc(100vh - 200px);
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      border-right: 1px solid var(--border);
+      padding: 40px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .sidebar-section { margin-bottom: 28px; }
+
+    .sidebar-label {
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .sidebar-link {
+      display: block;
+      font-size: 13px;
+      color: var(--text);
+      padding: 4px 0;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .sidebar-link:hover { color: var(--muted); text-decoration: none; }
+    .sidebar-link.active { font-weight: 500; }
+
+    .sidebar-foot {
+      margin-top: auto;
+      font-size: 10px;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    /* ── MAIN CONTENT ── */
+    .content {
+      padding: 48px 72px 120px;
+    }
+
+    .back-link {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      display: inline-block;
+      margin-bottom: 40px;
+    }
+
+    .back-link:hover { color: var(--text); text-decoration: none; }
+
+    /* ── ARTICLE HEADER ── */
+    .article-tag {
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .article-title {
+      font-size: clamp(28px, 4vw, 52px);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 24px;
+    }
+
+    .article-meta {
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      gap: 20px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 0;
+    }
+
+    /* ── COVER BANNER ── */
+    .cover-banner {
+      width: 100%;
+      height: 360px;
+      overflow: hidden;
+      margin-bottom: 40px;
+    }
+    .cover-banner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+
+    /* ── MUSIC PLAYER (vertical sidebar) ── */
+    .music-sidebar {
+      position: absolute;
+      top: 360px;
+      right: 0;
+      width: 56px;
+      height: calc(100vh - 360px);
+      border-left: 1px solid var(--border);
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 32px 0;
+      z-index: 20;
+    }
+
+    .music-label {
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      writing-mode: vertical-rl;
+    }
+
+    .music-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: var(--font);
+      font-size: 12px;
+      color: var(--muted);
+      padding: 0;
+      transition: color 0.15s;
+    }
+
+    .music-btn:hover  { color: var(--text); }
+    .music-btn.playing { color: var(--text); }
+    .play-sym { font-size: 8px; }
+
+    .music-track-info {
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .music-track-name { font-size: 12px; font-style: italic; color: var(--text); }
+    .music-track-artist { font-size: 10px; color: var(--muted); }
+
+    .music-progress-bar {
+      width: 1px;
+      flex: 1;
+      background: var(--border);
+      cursor: pointer;
+      position: relative;
+      margin: 20px 0;
+    }
+
+    .music-progress-fill {
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      background: var(--text);
+      height: 0%;
+      transition: height 0.5s linear;
+    }
+
+    .music-time {
+      font-size: 9px;
+      color: var(--muted);
+      writing-mode: vertical-rl;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: center;
+    }
+
+    body { padding-right: 56px; }
+
+    /* ── ARTICLE BODY ── */
+    .article-body {
+      max-width: 660px;
+      font-size: 15px;
+      line-height: 1.85;
+    }
+
+    .article-body p {
+      margin-bottom: 24px;
+      color: var(--text);
+    }
+
+    .article-body em { font-style: italic; }
+
+    /* Section headings — italic, small caps feel */
+    .article-body h2 {
+      font-size: 15px;
+      font-weight: 400;
+      font-style: italic;
+      margin: 48px 0 20px;
+      color: var(--text);
+    }
+
+    .article-body h2::before {
+      content: '';
+      display: block;
+      width: 24px;
+      height: 1px;
+      background: var(--border);
+      margin-bottom: 16px;
+    }
+
+    /* Blockquote */
+    .article-body blockquote {
+      margin: 32px 0;
+      padding: 0 0 0 20px;
+      border-left: 1px solid var(--text);
+    }
+
+    .article-body blockquote p {
+      font-size: 14px;
+      font-style: italic;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .article-body blockquote cite {
+      font-size: 11px;
+      color: var(--muted);
+      font-style: normal;
+      display: block;
+    }
+
+    /* Footnote markers */
+    .fn {
+      font-size: 9px;
+      vertical-align: super;
+      line-height: 0;
+      color: var(--muted);
+      text-decoration: none;
+      margin-left: 1px;
+    }
+
+    .fn:hover { color: var(--text); }
+
+    /* Image figures */
+    .article-figure {
+      margin: 36px 0;
+    }
+
+    .article-figure .img-slot {
+      width: 100%;
+      background: #f5f5f5;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 220px;
+      font-size: 11px;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .article-figure img {
+      width: 100%;
+      display: block;
+      border: 1px solid var(--border);
+    }
+
+    .article-figure figcaption {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 8px;
+      line-height: 1.6;
+    }
+
+    .article-figure figcaption a {
+      color: var(--muted);
+      word-break: break-all;
+    }
+
+    /* References */
+    .references {
+      margin-top: 64px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+      max-width: 660px;
+    }
+
+    .references-heading {
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .ref-list {
+      list-style: none;
+    }
+
+    .ref-item {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 10px;
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .ref-num {
+      flex-shrink: 0;
+      color: var(--muted);
+      min-width: 20px;
+    }
+
+    .ref-item a {
+      color: var(--muted);
+      word-break: break-all;
+    }
+
+    .ref-item a:hover { color: var(--text); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 700px) {
+      .body-grid { grid-template-columns: 1fr; }
+      .sidebar { border-right: none; border-bottom: 1px solid var(--border); flex-direction: row; flex-wrap: wrap; gap: 16px; padding: 20px 24px; }
+      .sidebar-section { margin-bottom: 0; }
+      .sidebar-foot { display: none; }
+      .content { padding: 32px 24px 80px; }
+      .music-sidebar { display: none; }
+      body { padding-right: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── VERTICAL MUSIC SIDEBAR ── -->
+<div class="music-sidebar">
+  <span class="music-label">Listening</span>
+  <audio id="audio" src="audio/eno-discreet.mp3"></audio>
+  <div class="music-progress-bar" id="prog" onclick="seek(event)">
+    <div class="music-progress-fill" id="fill"></div>
+  </div>
+  <div class="music-track-info">
+    <span class="music-track-name">Discreet Music</span>
+    <span class="music-track-artist">Brian Eno · 1975</span>
+  </div>
+  <div class="music-time">
+    <span id="time">0:00</span>
+    <span>31:04</span>
+  </div>
+  <button class="music-btn" id="mbtn" onclick="togglePlay()">
+    <span class="play-sym" id="msym">▶</span>
+  </button>
+</div>
+
+<!-- ── HEADER ── -->
+<header class="site-header">
+  <a href="index.html"><span class="site-name">D-itch</span></a>
+  <span class="site-tagline">Montréal &amp; Glasgow</span>
+</header>
+
+<div class="body-grid">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <span class="sidebar-label">Navigate</span>
+      <a class="sidebar-link" href="index.html">Home</a>
+      <a class="sidebar-link" href="#">Archive</a>
+    </div>
+    <div class="sidebar-section">
+      <span class="sidebar-label">Listen</span>
+      <a class="sidebar-link" href="#">Music</a>
+      <a class="sidebar-link" href="#">Playlists</a>
+    </div>
+    <div class="sidebar-section">
+      <span class="sidebar-label">About</span>
+      <a class="sidebar-link" href="about.html">About/Contact</a>
+      <a class="sidebar-link" href="#">Submit</a>
+    </div>
+    <div class="sidebar-foot">Issue I<br>May 2026</div>
+  </aside>
+
+  <!-- ── CONTENT ── -->
+  <main class="content">
+
+    <figure class="cover-banner">
+      <img src="images/odc/banner.png" alt="Organs of a Digitized Society">
+    </figure>
+
+    <h1 class="article-title">Organs of a Digitized Society</h1>
+    <div class="article-meta">
+      <span>Frank</span>
+      <span>May 2026</span>
+    </div>
+
+    <!-- ── ARTICLE BODY ── -->
+    <div class="article-body">
+
+      <p>
+        The hum of generators, the heat of information flow, and the mechanical whir of fans. 
+        In a sanitized environment such noise could be mistaken for life, but the life it mimics 
+        is nowhere to be seen. In a data centre, systems capable of managing indescribable volumetric
+         streams of information leave an overwhelming auditory mark. Each bit flowing- manipulated, 
+         processed, reprocessed, repackaged, cooled - energy seeping out of the system, 
+         <em>system exhaust</em>. Transient noise, mechanical and electrical, generated at a steady rate 
+         becomes drone, reverberating around the room in waves - light and sound. Global information 
+         circulation. <em>Life by the information superhighway</em>. 
+      </p>
+
+      <h4>Organs of a Digitized Society</h4>
+
+      <p>
+        The smooth operation of data centres are crucial for contemporary life. They are the motors keeping
+         digital spaces intact. The recent Amazon Web Services (AWS) outage on the 20th Oct 2025 caused 
+         major disruptions to HMRC, Zoom, and banking services such as Lloyds, Bank of Scotland, and 
+         Halifax <a href="#fn1" class="fn">[1]</a>
+      </p>
+
+      <figure class="article-figure">
+        <img src="images/odc/image.png" alt="Data Centre">
+        <figcaption>
+          Anthropic-Amazon New Carlisle Data Facility, courtesy of © 2026 Vantor Copernicus Sentinel data 2025. <a href="#fn2" class="fn">[2]</a>
+        </figcaption>
+      </figure>
+
+      <p>
+        “In the UK,… access to all sorts of public services — from tax self-assessment to claiming benefits 
+        — was severely impacted: ‘Sorry, there is a problem with the service. Try again later’”"<a href="#fn3" class="fn">[3]</a>. 
+        Nine days later, a similar Microsoft Azure outage impacted Microsoft 365, Outlook, Teams, OpenAI, Heathrow Airport, Youtube, 
+        Facebook etc. globally<a href="#fn4" class="fn">[4]</a>
+      </p>
+
+      <p>
+        Every connection, every execution increasingly requires the removed computation 
+        powers of a data center. Without, financial transactions, state administration, and food 
+        logistics would collapse. The cybersecurity industry operates upon “predictions that urban 
+        centres would descend into chaos within three days without a functioning digital network. 
+        The supply of electricity, water, and food would halt” <a href="#fn5" class="fn">[5]</a>.
+        They have become <em>organs of a digitized society</em>.
+      </p>
+
+      <h4>Growing a Data Body</h4>
+
+      <p>
+        We are growing a global body of data. This <a href="https://www.datacentermap.com/">
+        map</a> gives a roughly up to date number of global data centres, concentrated in North 
+        America, Europe, and East Asia. In the UK there are approx. 
+        <a href="https://www.datacentermap.com/united-kingdom/">500 </a>now, and 
+        continuously expanding. Intimately interconnected into a communicative nervous 
+        system
+      </p>
+
+      <figure class="article-figure">
+        <img src="images/odc/image2.png" alt="Data Center Balancing">
+        <figcaption>
+          Worldwide Data Centre Market as of 2025, courtesy of Brown Advisory <a href="#fn6" class="fn">[6]</a>
+        </figcaption>
+      </figure>
+
+      <p>
+        As societal functions became digitized, a new business venture emerged - data analytics - 
+        tracking user interactions within digital environments. Likes, shares, watch time, comments, 
+        time of day, location, heart rate, steps, groceries - all to map out <em>patterns of 
+        interactions</em> - to create a profile optimized to predict future user behaviour. To do so, 
+        data sets on users were expanded, and so too were opportunities for user contributions. Fit-
+        bits, card points, subscription services, user cookies. Non-human-human interfaces onto 
+        which users would express their desires - desires to purchase, to read, to watch… data (un)
+        knowingly scraped from every click, scroll, scan, and pause
+      </p>
+
+      <p>
+        Behavioural models are bought and sold, competing amongst other tech companies to best
+        predict user outcomes, used to ‘optimize human interactions with digital spaces’ (targeted 
+        ads, dynamic pricing etc.) The proliferation of data centres has permitted the proliferation 
+        of digital surveillance. The Cambridge Analytica scandal in 2018, a self-styled “global 
+        election management agency” highlighted the potential of behavioural models for anti-
+        democratic political manipulation, using data scraped from 87 million Facebook users <a href="#fn7" class="fn">[7]</a>.
+      </p>
+
+      <p>
+        As recently as the 4th Sep 2025, Google paid $425 million ‘for breaching users privacy by 
+        collecting data from millions of users even after they had turned off a tracking feature in 
+        their Google accounts "<a href="#fn8" class="fn">[8]</a> In January 2026,
+        Google paid out $68 million for sending advertisers private conversations after Google
+        Assistant was mistakenly triggered.<a href="#fn9" class="fn">[9]</a> Acxiom, an American
+        big data company, promises clients a "360-degree customer view" — holding data on more
+        Americans than the FBI.<a href="#fn10" class="fn">[10]</a>
+      </p>
+
+      <figure class="article-figure">
+        <img src="images/odc/image3.png" alt="Palantir_patent">
+        <figcaption>
+        Palantir Patent - ‘<strong>Presentation and analysis of user interaction data’</strong> <a href="#fn10" class="fn">[11]</a>
+        </figcaption>
+      </figure>
+      <p>
+        Although data protection legislation was introduced to protect netizens — for example,
+        the UK General Data Protection Regulation in 2018 — the rise of machine learning and
+        large language models means data resources and the functions they serve remain
+        in contention.
+      </p>
+
+      <h4>Interactions with the Human Body</h4>
+
+      <p>
+        We bleed information. Nutrition, oxygenation, cortisol, cholesterol, blood pressure, heart 
+        function, sweat… variable information over varying timescales - seconds, lifetimes, to 
+        generations. Medical information is extremely personal. The personal is political. The 
+        National Health Service (NHS) holds decades worth of data on British patients (past 
+        conditions, pre-dispositions, GP registrations, hospital activity, patient safety, family history 
+        etc.). In May 2024, the Tony Blair Institute (TBI) produced a report calling to “fix Britain’s 
+        “data-access problem”: create a “single front door” providing “seamless access” to NHS 
+        data; and host all of this data outside the NHS, while retaining government control of the 
+        programme” [<a href="#fn12" class="fn">[12]</a> Missing are proposals to modernise the
+        NHS within government capabilities — which might require properly funding the NHS — so as
+        to retain patient data privacy.
+      </p>
+
+      <p>
+        Over the course of £257 million in donations, Larry Ellison (CEO of Oracle, a
+        Texas-based software engineering firm) has taken the Tony Blair Institute and turned it
+        into a think tank focused on disseminating tech policy proposals favouring private
+        interventions into the NHS. The TBI had a turnover of £145.3m in 2023, while comparable
+        think tanks such as the Institute of Public Policy Research had incomes of £4.3m in
+        2023–24.<a href="#fn12" class="fn">[12]</a> Blair and Ellison's special relationship grew
+        from 2003, when Oracle provided supplies to specialist schools, into £1.1bn worth of
+        government contracts since.
+      </p>
+
+      <figure class="article-figure">
+        <img src="images/odc/image4.png" alt="Tony Blair Larry Ellison">
+        <figcaption>
+          Oracle Founder Larry Ellison and Former Prime Minister Tony Blair on Ellison Super Yacht, 2024 <a href="#fn13" target="_blank" rel="noopener">[13] </a>
+        </figcaption>
+      </figure>
+
+      <p>
+        Unsurprisingly, the drive to turn the NHS into an insurance-based system has been taken
+        up by the current Starmer government — hiring a former Blair advisor, Peter Kyle, as
+        Technology Secretary, and enlisting Palantir under a £300 million contract to undertake
+        the project.<a href="#fn12" class="fn">[12]</a> Under the insurance-based scheme, patient
+        data would no longer serve patient interest, but instead facilitate insurance companies
+        to charge extra, or refuse financial coverage entirely, on the basis of pre-existing
+        conditions or any other arbitrary factor. Ironically, it is the "outdated" data system
+        currently preventing private sector penetration into British medical data. It is in this
+        context that current NHS "modernisation" drives must be understood.
+      </p>
+
+      <h4>Digital Panopticon</h4>
+
+      <p>
+        Everything around me looks modern — or contemporary, I should say. Polished: glass and
+        steel. I'm standing in a queue in the new terminal with my passport in hand. Last time I
+        flew I was in a queue round the corner, but I've been guided to this new section. As I
+        reach the red line, I open the passport to my photo as the sign asks. I walk up to the
+        next vacant lane, put my passport on the scanner, and press down. The bar begins to fill.
+        I'm scanned through. The first glass barrier silently makes way to the second. This one
+        has a camera. It automatically readjusts to my height. The red dot glows. The off-centre
+        LED screen displays a live image of me. My expression looks blank but fatigued — or does
+        it? The camera focuses for a second or two, thinking… Is there even someone behind it?
+        Does there have to be? Does it see what I see? Where will these photos go? What can it
+        sense? — the barrier opens, disrupting my thoughts. I walk through.
+        <em>Everything is so convenient.</em>
+      </p>
+
+      <figure class="article-figure">
+        <img src="images/odc/image5.png" alt="Shabana Mahmood">
+        <figcaption>
+          Tony Blair interviews Shabana Mahmood during a TBI panel <a href="#fn14" class="fn">[14]</a>
+        </figcaption>
+      </figure>
+
+      <p>
+        In an interview with Blair last month, Home Secretary Shabana Mahmood outlined her 
+        belief in the potential of such data networks to transform law and order. She goes on to 
+        express her desire to see the expansion of AI use in the police force to facilitate “Minority 
+        Report-style” policing .<a href="#fn15" class="fn">[15]</a> It doesn't matter
+        to Mahmood that current facial recognition technologies disproportionately misidentify people of colour, increasing wrongful arrests and police
+        brutality against already marginalised communities<a href="#fn16" class="fn">[16]</a> or even that the 2002 dystopian sci-fi film revolves around the manipulation and misuse
+        of predictive policing.
+      </p>
+
+
+      <figure class="article-figure">
+        <img src="images/odc/image6.jpg" alt="Facial Recognition">
+        <figcaption>
+          British police mounting facial recognition placards in public places <a href="#fn17" class="fn">[17]</a>
+        </figcaption>
+      </figure>
+  
+
+      <p>
+        As of January 2026, the UK government has begun rolling out facial recognition software
+        developed by Israeli company Corsight AI and software contractor Palantir
+        Technologies.<a href="#fn18" class="fn">[18]</a> This has already led to the wrongful
+        arrest of an Asian man 100 miles from the site of a burglary, in a city he had never
+        visited.<a href="#fn19" class="fn">[19]</a> Mahmood even went on record saying she wanted
+        "to achieve, by means of AI and technology, what Jeremy Bentham tried to do with
+        panopticon — that is, that the eyes of the state can be on you at all
+        times."<a href="#fn18" class="fn">[18]</a>
+      </p>
+
+      <p>
+        Unrestricted by the confines of traditional disciplinary systems (prisons, detention facilities, 
+        watchtowers etc.), the digital realm overcomes optical barriers and produced a diffuse method of 
+        surveillance (think the ankle monitor). Prisoners are now <em>permitted </em>to stay at home, a 
+        permissive freedom with a darker undertone - all homes become potential prison cells. GPS, timestamps,
+       patterns of movements etc. are all carried out through invisible transmissions in the radio regime.
+       Surveillance is no longer overt, and regularly exercised by corporate actors.</p>
+
+      <h4>The Fetishisation of Data</h4>
+
+      <p>
+        We are knowable maps. Embedded statistics. Predictable. Nothing less and nothing more.
+        Desires come and go, on command. We are at a transition — away from the intractable,
+        towards clear certainty. Everything, everyone condemned to transparency through an
+        interconnected nervous system. All that is left is to be steered to a final destination,
+        in the knowledge of reaching the warm embrace of finality. Gone is mendacity; now all
+        that remains must be true. At least so claims the new faith of <em>Data-ism</em>.
+      </p>
+
+      <p>In <em>The New York Times</em> in 2013, David Brooks wrote:<a href="#fn20" class="fn">[20]</a></p>
+
+      <blockquote>
+        <p>
+          "If you asked me to describe the rising philosophy of the day, I'd say it is data-ism.
+          We now have the ability to gather huge amounts of data. This ability seems to carry with
+          it certain cultural assumptions — that everything that can be measured should be
+          measured; that data is a transparent and reliable lens that allows us to filter out
+          emotionalism and ideology; that data will help us do remarkable things — like foretell
+          the future."
+        </p>
+        <cite>— David Brooks, <em>The New York Times</em>, 2013</cite>
+      </blockquote>
+
+      <p>
+        The surveillance component of data systems is <em>voyeuristic</em>. It proclaims to
+        reveal an inner truth about a surveilled subject and their behaviours. It fetishizes not
+        the subject itself — since the subject may remain effectively anonymous — but the data.
+        <em>Data-ism is the fetishization of data</em> permeating those subject to its
+        surveillance, at its most acute in personalized social media algorithms.
+      </p>
+
+    <figure class="article-figure">
+        <img src="images/odc/Image7.png" alt="Oracle Patents">
+        <figcaption>
+          Approved US Patent by Oracle International Corp for ‘<strong>Session activity tracking for session adoption across multiple data centers’ </strong> <a href="#fn21" class="fn" rel="noopener">[21]</a>
+        </figcaption>
+      </figure>
+
+      <p>
+        We may get embarrassed at the content shown by personalized algorithms, as if they reveal
+        a deeper truth about ourselves — as if they were a mirror to our desires. We are all curators,
+        after all. Every input, passive or active, feeds what we see, what we know, and in a
+        sense who we are becoming. We may even take corrective action, changing how personalized
+        algorithms <em>view</em> us by altering the data they receive. This embarrassment is the
+        subconscious recognition of being surveilled. Consciously or subconsciously changing
+        behavioural patterns then becomes a form of censorship — in other words, <em>control</em>.
+      </p>
+
+      <p>
+        In taking ownership of personalized algorithms, we submit to the logic of Data-ism. We
+        admit the algorithm is a real or valid representation of who we are, and imbue it with
+        significance and power over us. In doing so, we ignore the programmed tendencies within
+        algorithms to spread engaging content — controversial, brainrot, sexual — to monopolize
+        attention. The algorithm then is purely a mechanism for tech company revenues, with a
+        digitized human face. One that may look like yours. Standing face to face with your
+        "digital twin."
+      </p>
+
+      <h4>Chapels of a Digitized Faith</h4>
+
+      <p>
+        The congregation is indifferent to the service. There is no visible leader. No light through
+        stained glass. No halls for music to fill. No ceremonies and no collective experience. The 
+        smell of candlewax has faded. Minarets and church bells have become obsolete, only 
+        cellular vibration remains. Angels confined to fibre optic cables. A choir of cooling systems. 
+        Faith lies in digital information circulation itself. Experience is individualised - a missing 
+        unified message. Its techno-evangelists claim its inevitability and its users become subjects 
+        of its networks. Networks produced by data centres - <em>chapels to a digitized faith</em>.
+      </p>
+      <figure class="article-figure">
+        <img src="images/odc/image8.jpg" alt="Data Tower">
+        <figcaption>
+          Bentham Crouwels' shiny data centre surrounded by a moat in Amsterdam  <a href="#fn22" class="fn" rel="noopener">[22]</a>
+        </figcaption>
+      </figure>
+
+
+      <p>
+        As Byung-Chul Han writes, "Big data is supposed to be freeing knowledge from subjective
+        arbitrariness… mistrust even extends to (political) theory, which is suspected of being
+        an ideology: if enough data are available, it should prove superfluous as well. The second
+        Enlightenment is the age of purely <em>data-driven knowledge</em>."<a href="#fn10" class="fn">[10]</a>
+      </p>
+
+      <p>
+        But the insights data can produce are restricted by the logic they represent. Only
+        correlations may be drawn from datasets. How A may influence B — no matter how strong —
+        does nothing to elucidate <em>why</em> that is the case; only that the data says so.
+        <em>The final conclusion is still a matter of interpretation</em>, requiring important
+        contextualisation — often multi-faceted, contradictory, potentially irrational.
+      </p>
+
+      <p>
+        Data cannot reveal how two factors may in fact condition one another, or be the product
+        of an overarching concept. The <em>concept</em> surrounds A and B, conditioning both,
+        and still requires an understanding of its applications and contexts — it still requires
+        <em>interpretation</em>. Only then can comprehension occur. There is no intelligence in
+        artificial intelligence. Computing power cannot substitute criticality or creativity;
+        it may only <em>automate pastiche</em> — a very postmodern condition.
+      </p>
+
+      <p>
+        Late-stage capitalism alienates humans by subjecting their intelligent capacities to
+        drudgery, as extensions to the cash machine and the computer. In automating such mundane
+        tasks through yet another extension of computation, and automating the economically
+        productive tasks once undertaken by humans, we are in no way automating our whole
+        intelligent capacities. To reduce the human to economic productivity allows the
+        fetishization of "artificial intelligence" and a debasement of the human - a very capitalist condition.
+      </p>
+
+      <figure class="article-figure">
+        <img src="images/odc/Image9.jpg" alt="Cameron Osborne Chapel">
+        <figcaption>
+          2015 - Former Prime Minister David Cameron and former Chancellor of the Exchequer George Osborne present at 
+          the converted Salem Chapel atop a glass roofed Data Centre <a href="#fn23" class="fn" rel="noopener">[23]</a>
+        </figcaption>
+      </figure>
+
+      <p>
+        The belief in the capacity of Big Data to achieve transparency — to fully know
+        its subjects, to rid society of emotionalism and ideology — is false. As Adorno pointed
+        out, "false clarity is another name for myth."<a href="#fn15" class="fn">[24]</a> The
+        belief in <em>Data-ism</em> is a new religion, one that claims to counter ideology but is
+        in fact <em>just another form of ideology</em>.
+        <em>We are building chapels to a digitized faith</em>.
+      </p>
+
+      <h4>In Conclusion: Capitalist Cyberspace</h4>
+
+      <p>
+          This article isn’t just about data centres. To focus on the technologies themselves used in coercive
+         profitable practices is, however, only one element. Data centres (especially AI-optimised) cause 
+         undeniable harm to local water and electrical resources, but the 5G tower or data centre need not
+          necessarily be used for such hostile purposes. It is the broader socio-economic incentive structure
+          that locks their current functions into place. Just as a CEO is required to increase shareholder 
+         value or be replaced, data centre propagation is integral to forecasted tech growth. Its hostile 
+         use is a consequence of the capitalist growth imperative. In Marxian terms, digital totalitarianism
+          is the product of commoditizing social relations and human behaviour, accelerated by competition. 
+          It is a product of a specific political and economic system, of which cyberspace simply reproduces.           Therefore, we operate not in a ‘neutral’ cyberspace but a <em> capitalist </em>  cyberspace.
+      </p>
+
+      <p>
+        What could cyberspace look like? The emergence of the internet had once posed this exact question
+         but its vision of a techno-utopian future synthesized with the economic system under which it
+          emerged. What resulted was a spatially de-localized but authoritarian surveillance system 
+          dominated by tech companies -  one that reflected the transnational wealth extraction of already
+          existing neoliberalism. A turn to democratization is necessary to combat digital overreach and
+          reestablish the digital commons. Diagnosing the extent and distribution of power across our
+          digitized societal organs is crucial, but it is only the first step on the path to transforming
+          capitalist cyberspace. While the digital and material may appear disconnected opposites at
+          first, the transformation of one is already reshaping the other - the question remains, 
+           <em>in whose interest</em>?
+      </p>
+
+    </div>
+
+    <!-- ── REFERENCES ── -->
+    <div class="references">
+      <span class="references-heading">References</span>
+      <ul class="ref-list">
+        <li class="ref-item" id="fn1"><a href="https://epoch.ai/data/data-centers/satellite-explorer/AnthropicAmazonNewCarlisle" target="_blank">[1] epoch.ai — Anthropic/Amazon New Carlisle Data Center (Satellite Explorer)</a></li>
+        <li class="ref-item" id="fn2"><a href="https://tribunemag.co.uk/2025/11/why-digital-sovereignty-matters" target="_blank">[2] Tribune Magazine — "Why Digital Sovereignty Matters" (November 2025)</a></li>
+        <li class="ref-item" id="fn3"><a href="https://economictimes.indiatimes.com/news/international/us/microsoft-azure-outage-services-and-businesses-hit-list-and-fixation-of-services-global-disruption-and-recovery-explained-heres-recovery-process-impact-on-global-services-microsoft-365-outlook-teams-azure-front-door-cloud-systems/articleshow/124917708.cms" target="_blank">[3] The Economic Times — "Microsoft Azure Outage: Services and Businesses Hit, Global Disruption and Recovery Explained"</a></li>
+        <li class="ref-item" id="fn4"><a href="https://www.e-flux.com/architecture/technoecologies/6783013/the-sysadmin-state-on-the-politics-of-digital-trust-and-security" target="_blank">[4] e-flux Architecture — "The Sysadmin State: On the Politics of Digital Trust and Security"</a></li>
+        <li class="ref-item" id="fn5"><a href="https://www.brownadvisory.com/intl/insights/data-center-balancing-act-powering-sustainable-ai-growth" target="_blank">[5] Brown Advisory — "Data Center Balancing Act: Powering Sustainable AI Growth"</a></li>
+        <li class="ref-item" id="fn6"><a href="https://www.theguardian.com/news/2018/mar/17/cambridge-analytica-facebook-influence-us-election" target="_blank">[6] The Guardian — "Cambridge Analytica: Facebook Influence on US Election" (17 March 2018)</a></li>
+        <li class="ref-item" id="fn7"><a href="https://www.bbc.co.uk/news/articles/c3dr91z0g4zo" target="_blank">[7] BBC News — Google told to pay $425m in privacy lawsuit</a></li>
+        <li class="ref-item" id="fn8"><a href="https://www.bbc.co.uk/news/articles/c4g38jv8zzwo" target="_blank">[8] BBC News — Google to pay $68m to settle lawsuit claiming it recorded private conversations</a></li>
+        <li class="ref-item" id="fn9">[9] Han, B.-C. (2017). <em>Psychopolitics: Neoliberalism and New Technologies of Power</em>. Verso Books.</li>
+        <li class="ref-item" id="fn10"><a href="https://patents.google.com/patent/US8689108B1/en?assignee=Palantir+Technologies+Inc." target="_blank">[10] Google Patents — US8689108B1, assignee: Palantir Technologies Inc.</a></li>
+        <li class="ref-item" id="fn11"><a href="https://www.newstatesman.com/politics/2025/09/inside-the-tony-blair-institute" target="_blank">[11] New Statesman — "Inside the Tony Blair Institute" (September 2025)</a></li>
+        <li class="ref-item" id="fn12"><a href="https://www.thetimes.com/business/technology/article/tony-blair-helps-billionaire-larry-ellison-open-oxford-institute-r2fmlkmhx" target="_blank">[12] The Times — "Tony Blair Helps Billionaire Larry Ellison Open Oxford Institute"</a></li>
+        <li class="ref-item" id="fn13"><a href="https://labourlist.org/2025/12/shabana-mahmood-tony-blair-resilience-faith-public-service/" target="_blank">[13] LabourList — "Shabana Mahmood, Tony Blair, Resilience, Faith, and Public Service" (December 2025)</a></li>
+        <li class="ref-item" id="fn14"><a href="https://www.thenational.scot/news/25780001.shabana-mahmood-proposes-ai-panopticon-system-state-surveillance/" target="_blank">[14] The National — "Shabana Mahmood proposes AI 'Panopticon' system of state surveillance"</a></li>
+        <li class="ref-item"  id="fn15"><a href="https://www.turing.ac.uk/news/publications/understanding-bias-facial-recognition-technologies" target="_blank">[15] The Alan Turing Institute — "Understanding Bias in Facial Recognition Technologies"</a></li>
+        <li class="ref-item" id="fn16"><a href="https://bigbrotherwatch.org.uk/campaigns/stop-facial-recognition/" target="_blank">[16] Big Brother Watch — "Stop Facial Recognition" campaign</a></li>
+        <li class="ref-item" id="fn17"><a href="https://www.theguardian.com/society/2026/feb/12/nhs-deal-with-ai-firm-palantir-called-into-question-after-officials-concerns-revealed" target="_blank">[17] The Guardian — "NHS Deal with AI Firm Palantir Called into Question After Officials' Concerns Revealed" (12 February 2026)</a></li>
+        <li class="ref-item" id="fn18"><a href="https://www.theguardian.com/technology/2026/feb/25/facial-recognition-error-prompts-police-to-arrest-asian-man-for-burglary-100-miles-away" target="_blank">[18] The Guardian — "Facial Recognition Error Prompts Police to Arrest Asian Man for Burglary 100 Miles Away" (25 February 2026)</a></li>
+        <li class="ref-item" id="fn19"><a href="https://www.nytimes.com/2013/02/05/opinion/brooks-the-philosophy-of-data.html" target="_blank">[19] The New York Times — Brooks, D., "The Philosophy of Data" (5 February 2013)</a></li>
+        <li class="ref-item" id="fn20"><a href="https://patents.google.com/patent/US10572649B2/en?q=(oracle+corp)+data+center&assignee=Oracle+International+Corporation" target="_blank">[20] Google Patents — US10572649B2, assignee: Oracle International Corporation (data center)</a></li>
+        <li class="ref-item" id="fn21"><a href="https://www.dezeen.com/2017/11/21/benthem-crouwel-stripy-tower-moat-amsterdam-data-centre-architecture-netherlands/" target="_blank">[21] Dezeen — "Benthem Crouwel's Stripy Tower with Moat in Amsterdam Data Centre" (21 November 2017)</a></li>
+        <li class="ref-item" id="fn22"><a href="https://aql.com/about/salem-chapel-heritage/" target="_blank">[22] aql — Salem Chapel Heritage</a></li>
+        <li class="ref-item" id="fn23">[23] Adorno, T. W. &amp; Horkheimer, M. (1944/2002). <em>Dialectic of Enlightenment: Philosophical Fragments</em>. Stanford University Press.</li>
+      </ul>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  const DURATION = 1864;
+  let isPlaying = false, elapsed = 0, interval;
+
+  const PAUSE = '■';
+  const PLAY  = '▶';
+
+  function togglePlay() {
+    const audio = document.getElementById('audio');
+    const sym   = document.getElementById('msym');
+    const btn   = document.getElementById('mbtn');
+
+    if (isPlaying) {
+      isPlaying = false;
+      clearInterval(interval);
+      sym.textContent = PLAY;
+      btn.classList.remove('playing');
+      if (!audio.paused) audio.pause();
+    } else {
+      isPlaying = true;
+      sym.textContent = PAUSE;
+      btn.classList.add('playing');
+      if (audio.src && !audio.src.endsWith('/')) audio.play().catch(() => {});
+      interval = setInterval(() => {
+        elapsed = Math.min(elapsed + 1, DURATION);
+        document.getElementById('fill').style.height = (elapsed / DURATION * 100) + '%';
+        document.getElementById('time').textContent = fmt(elapsed);
+        if (elapsed >= DURATION) togglePlay();
+      }, 1000);
+    }
+  }
+
+  function seek(e) {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const pct = 1 - ((e.clientY - rect.top) / rect.height);
+    elapsed = Math.floor(Math.max(0, Math.min(1, pct)) * DURATION);
+    document.getElementById('fill').style.height = (Math.max(0, Math.min(1, pct)) * 100) + '%';
+    document.getElementById('time').textContent = fmt(elapsed);
+    const audio = document.getElementById('audio');
+    if (audio.src && !audio.src.endsWith('/')) audio.currentTime = elapsed;
+  }
+
+  function fmt(s) {
+    const m = Math.floor(s / 60), sec = s % 60;
+    return m + ':' + (sec < 10 ? '0' : '') + sec;
+  }
+</script>
+
+</body>
+</html>
