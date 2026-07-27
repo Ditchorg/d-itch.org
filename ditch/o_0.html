@@ -31,7 +31,7 @@
       line-height: 1.5;
       -webkit-font-smoothing: antialiased;
       min-height: 100vh;
-      padding-right: 56px;
+      padding-right: 56px; /* space for music sidebar */
     }
     a {
       color: var(--text);
@@ -51,16 +51,13 @@
       display: block;
       width: 100%;
       height: auto;
-      /* natural aspect ratio, no cropping */
     }
-    /* credit below the image — now a regular caption */
     .cover-banner .credit {
       font-size: 10px;
       color: var(--muted);
       margin-top: 7px;
       line-height: 1.6;
       text-align: left;
-      /* no overlay styling */
     }
     .cover-banner .credit a {
       color: var(--muted);
@@ -74,13 +71,13 @@
       text-decoration: none;
     }
 
-    /* ── MUSIC SIDEBAR ── */
+    /* ── MUSIC SIDEBAR ── full viewport height */
     .music-sidebar {
-      position: absolute;
-      top: 360px;
+      position: fixed;
+      top: 0;
       right: 0;
       width: 56px;
-      height: calc(100vh - 360px);
+      height: 100vh;
       border-left: 1px solid var(--border);
       background: var(--bg);
       display: flex;
@@ -182,11 +179,11 @@
     /* ── LAYOUT ── */
     .body-grid {
       display: grid;
-      grid-template-columns: 1fr 4fr;
+      grid-template-columns: 1fr 3fr 1.2fr;
       min-height: calc(100vh - 200px);
     }
 
-    /* ── SIDEBAR ── */
+    /* ── LEFT SIDEBAR (nav) ── */
     .sidebar {
       border-right: 1px solid var(--border);
       padding: 40px 24px;
@@ -224,10 +221,9 @@
       line-height: 1.8;
     }
 
-    /* ── CONTENT ── */
+    /* ── MAIN CONTENT ── */
     .content {
-      padding: 64px 80px 120px;
-      max-width: 860px;
+      padding: 64px 40px 120px 0;
     }
     .back-link {
       font-size: 11px;
@@ -399,36 +395,45 @@
       margin-top: 3px;
     }
 
-    /* ── REFERENCES ── */
-    .references {
-      margin-top: 64px;
-      padding-top: 32px;
-      border-top: 1px solid var(--border);
-      max-width: 640px;
+    /* ── RIGHT REFERENCES SIDEBAR (sticky) ── */
+    .ref-sidebar {
+      padding: 64px 20px 0 0;
+      position: sticky;
+      top: 24px;
+      align-self: start;
+      max-height: calc(100vh - 48px);
+      overflow-y: auto;
     }
-    .references-heading {
+    .ref-sidebar .references {
+      margin-top: 0;
+      padding-top: 0;
+      border-top: none;
+      max-width: 100%;
+    }
+    .ref-sidebar .references-heading {
+      display: block;
       font-size: 9px;
       letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--muted);
-      margin-bottom: 20px;
-      display: block;
+      margin-bottom: 12px;
     }
-    .ref-list {
+    .ref-sidebar .ref-list {
       list-style: none;
     }
-    .ref-item {
+    .ref-sidebar .ref-item {
       display: flex;
-      gap: 12px;
+      gap: 8px;
       margin-bottom: 10px;
-      font-size: 11px;
+      font-size: 10px;
       color: var(--muted);
-      line-height: 1.7;
+      line-height: 1.6;
     }
-    .ref-num {
+    .ref-sidebar .ref-num {
       flex-shrink: 0;
-      min-width: 36px;
+      min-width: 28px;
       color: var(--muted);
+      font-size: 10px;
     }
 
     /* ── RESPONSIVE ── */
@@ -451,7 +456,7 @@
         display: none;
       }
       .content {
-        padding: 32px 24px 80px;
+        padding: 32px 24px 0 24px;
       }
       .music-sidebar {
         display: none;
@@ -463,12 +468,24 @@
         font-size: 9px;
         margin-top: 5px;
       }
+
+      .ref-sidebar {
+        position: static;
+        padding: 0 24px 40px 24px;
+        max-height: none;
+        overflow-y: visible;
+      }
+      .ref-sidebar .references {
+        margin-top: 32px;
+        padding-top: 24px;
+        border-top: 1px solid var(--border);
+      }
     }
   </style>
 </head>
 <body>
 
-  <!-- ── VERTICAL MUSIC SIDEBAR ── -->
+  <!-- ── VERTICAL MUSIC SIDEBAR ── full height, fixed -->
   <div class="music-sidebar">
     <span class="music-label">Listening</span>
     <audio id="audio" src="https://archive.org/download/on-opitmization....-2/On%20Opitmization....%20(2).mp3.mpeg"></audio>
@@ -495,6 +512,7 @@
 
   <div class="body-grid">
 
+    <!-- LEFT NAV -->
     <aside class="sidebar">
       <div class="sidebar-section">
         <span class="sidebar-label">Navigate</span>
@@ -514,13 +532,13 @@
       <div class="sidebar-foot">Issue I<br />May 2026</div>
     </aside>
 
+    <!-- MAIN CONTENT -->
     <main class="content">
 
-      <!-- ── HEADER IMAGE — uncropped, credit below ── -->
       <figure class="cover-banner">
         <img src="images/oo/header.jpeg" alt="On Optimization…" />
         <figcaption class="credit">
-          Photo: <a href="https://ca.pinterest.com/sxin6872/" target="_blank" rel="noopener">Pinter User Sxin6872</a>
+          Photo: <a href="https://www.instagram.com/noechaba.jpg/" target="_blank" rel="noopener">@noechaba.jpg</a>
         </figcaption>
       </figure>
 
@@ -768,8 +786,10 @@
         </p>
 
       </div>
+    </main>
 
-      <!-- ── REFERENCES ── -->
+    <!-- RIGHT REFERENCES SIDEBAR (sticky) -->
+    <aside class="ref-sidebar">
       <div class="references">
         <span class="references-heading">References</span>
         <ul class="ref-list">
@@ -799,12 +819,12 @@
           </li>
         </ul>
       </div>
+    </aside>
 
-    </main>
   </div>
 
   <script>
-    const DURATION = 296;
+    const DURATION = 296; // change this to your track's total seconds
     let isPlaying = false,
         elapsed = 0,
         interval;

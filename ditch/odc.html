@@ -29,7 +29,7 @@
       line-height: 1.5;
       -webkit-font-smoothing: antialiased;
       min-height: 100vh;
-      padding-right: 56px;
+      padding-right: 56px; /* music sidebar */
     }
 
     a { color: var(--text); text-decoration: none; }
@@ -51,12 +51,14 @@
 
     .site-tagline { font-size: 13px; color: var(--muted); letter-spacing: 0.04em; }
 
+    /* ── THREE-COLUMN GRID ── */
     .body-grid {
       display: grid;
-      grid-template-columns: 1fr 4fr;
+      grid-template-columns: 1fr 3fr 1.2fr;
       min-height: calc(100vh - 200px);
     }
 
+    /* ── LEFT NAV SIDEBAR ── */
     .sidebar {
       border-right: 1px solid var(--border);
       padding: 40px 24px;
@@ -90,7 +92,10 @@
 
     .sidebar-foot { margin-top: auto; font-size: 10px; color: var(--muted); line-height: 1.8; }
 
-    .content { padding: 48px 72px 120px; }
+    /* ── MAIN CONTENT ── */
+    .content {
+      padding: 48px 40px 120px 0;
+    }
 
     .back-link {
       font-size: 11px;
@@ -293,45 +298,97 @@
 
     .article-figure figcaption a { color: var(--muted); word-break: break-all; }
 
-    .references {
-      margin-top: 64px;
-      padding-top: 32px;
-      border-top: 1px solid var(--border);
-      max-width: 660px;
+    /* ── RIGHT REFERENCES SIDEBAR (sticky) ── */
+    .ref-sidebar {
+      padding: 48px 20px 0 0;
+      position: sticky;
+      top: 24px;
+      align-self: start;
+      max-height: calc(100vh - 48px);
+      overflow-y: auto;
+      border-left: 1px solid var(--border);
+      padding-left: 20px;
     }
 
-    .references-heading {
+    .ref-sidebar .references {
+      margin-top: 0;
+      padding-top: 0;
+      border-top: none;
+      max-width: 100%;
+    }
+
+    .ref-sidebar .references-heading {
+      display: block;
       font-size: 9px;
       letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--muted);
-      margin-bottom: 20px;
-      display: block;
+      margin-bottom: 12px;
     }
 
-    .ref-list { list-style: none; }
+    .ref-sidebar .ref-list {
+      list-style: none;
+    }
 
-    .ref-item {
+    .ref-sidebar .ref-item {
       display: flex;
-      gap: 12px;
+      gap: 8px;
       margin-bottom: 10px;
-      font-size: 11px;
+      font-size: 10px;
       color: var(--muted);
       line-height: 1.6;
     }
 
-    .ref-num { flex-shrink: 0; color: var(--muted); min-width: 20px; }
-    .ref-item a { color: var(--muted); word-break: break-all; }
-    .ref-item a:hover { color: var(--text); }
+    .ref-sidebar .ref-num {
+      flex-shrink: 0;
+      min-width: 28px;
+      color: var(--muted);
+      font-size: 10px;
+    }
 
+    .ref-sidebar .ref-item a {
+      color: var(--muted);
+      word-break: break-all;
+    }
+
+    .ref-sidebar .ref-item a:hover {
+      color: var(--text);
+    }
+
+    /* ── RESPONSIVE ── */
     @media (max-width: 700px) {
-      .body-grid { grid-template-columns: 1fr; }
-      .sidebar { border-right: none; border-bottom: 1px solid var(--border); flex-direction: row; flex-wrap: wrap; gap: 16px; padding: 20px 24px; }
+      .body-grid {
+        grid-template-columns: 1fr;
+      }
+      .sidebar {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 16px;
+        padding: 20px 24px;
+      }
       .sidebar-section { margin-bottom: 0; }
       .sidebar-foot { display: none; }
-      .content { padding: 32px 24px 80px; }
+      .content { padding: 32px 24px 0; }
       .music-sidebar { display: none; }
       body { padding-right: 0; }
+
+      /* references move back inline on mobile */
+      .ref-sidebar {
+        position: static;
+        padding: 0 24px 40px 24px;
+        max-height: none;
+        overflow-y: visible;
+        border-left: none;
+        border-top: 1px solid var(--border);
+        margin-top: 32px;
+      }
+      .ref-sidebar .references {
+        margin-top: 0;
+        padding-top: 24px;
+        border-top: none;
+      }
     }
   </style>
 </head>
@@ -365,6 +422,7 @@
 
 <div class="body-grid">
 
+  <!-- LEFT NAV -->
   <aside class="sidebar">
     <div class="sidebar-section">
       <span class="sidebar-label">Navigate</span>
@@ -384,6 +442,7 @@
     <div class="sidebar-foot">Issue I<br>May 2026</div>
   </aside>
 
+  <!-- MAIN CONTENT -->
   <main class="content">
 
     <figure class="cover-banner">
@@ -767,37 +826,40 @@
 
     </div>
 
-    <!-- ── REFERENCES ── -->
+  </main>
+
+  <!-- RIGHT REFERENCES SIDEBAR (sticky) -->
+  <aside class="ref-sidebar">
     <div class="references">
       <span class="references-heading">References</span>
       <ul class="ref-list">
-        <li class="ref-item" id="fn1"><span class="ref-num">[1]</span><a href="https://epoch.ai/data/data-centers/satellite-explorer/AnthropicAmazonNewCarlisle" target="_blank">epoch.ai &mdash; Anthropic/Amazon New Carlisle Data Center</a></li>
-        <li class="ref-item" id="fn2"><span class="ref-num">[2]</span><a href="https://tribunemag.co.uk/2025/11/why-digital-sovereignty-matters" target="_blank">Tribune Magazine &mdash; "Why Digital Sovereignty Matters" (November 2025)</a></li>
-        <li class="ref-item" id="fn3"><span class="ref-num">[3]</span><a href="https://economictimes.indiatimes.com/news/international/us/microsoft-azure-outage-services-and-businesses-hit-list-and-fixation-of-services-global-disruption-and-recovery-explained-heres-recovery-process-impact-on-global-services-microsoft-365-outlook-teams-azure-front-door-cloud-systems/articleshow/124917708.cms" target="_blank">The Economic Times &mdash; Microsoft Azure Outage</a></li>
-        <li class="ref-item" id="fn4"><span class="ref-num">[4]</span><a href="https://www.e-flux.com/architecture/technoecologies/6783013/the-sysadmin-state-on-the-politics-of-digital-trust-and-security" target="_blank">e-flux &mdash; "The Sysadmin State"</a></li>
-        <li class="ref-item" id="fn5"><span class="ref-num">[5]</span><a href="https://www.brownadvisory.com/intl/insights/data-center-balancing-act-powering-sustainable-ai-growth" target="_blank">Brown Advisory &mdash; "Data Center Balancing Act"</a></li>
-        <li class="ref-item" id="fn6"><span class="ref-num">[6]</span><a href="https://www.theguardian.com/news/2018/mar/17/cambridge-analytica-facebook-influence-us-election" target="_blank">The Guardian &mdash; Cambridge Analytica (17 March 2018)</a></li>
-        <li class="ref-item" id="fn7"><span class="ref-num">[7]</span><a href="https://www.bbc.co.uk/news/articles/c3dr91z0g4zo" target="_blank">BBC News &mdash; Google $425m privacy lawsuit</a></li>
-        <li class="ref-item" id="fn8"><span class="ref-num">[8]</span><a href="https://www.bbc.co.uk/news/articles/c4g38jv8zzwo" target="_blank">BBC News &mdash; Google $68m Google Assistant settlement</a></li>
+        <li class="ref-item" id="fn1"><span class="ref-num">[1]</span><a href="https://epoch.ai/data/data-centers/satellite-explorer/AnthropicAmazonNewCarlisle" target="_blank">epoch.ai — Anthropic/Amazon New Carlisle Data Center</a></li>
+        <li class="ref-item" id="fn2"><span class="ref-num">[2]</span><a href="https://tribunemag.co.uk/2025/11/why-digital-sovereignty-matters" target="_blank">Tribune Magazine — "Why Digital Sovereignty Matters" (November 2025)</a></li>
+        <li class="ref-item" id="fn3"><span class="ref-num">[3]</span><a href="https://economictimes.indiatimes.com/news/international/us/microsoft-azure-outage-services-and-businesses-hit-list-and-fixation-of-services-global-disruption-and-recovery-explained-heres-recovery-process-impact-on-global-services-microsoft-365-outlook-teams-azure-front-door-cloud-systems/articleshow/124917708.cms" target="_blank">The Economic Times — Microsoft Azure Outage</a></li>
+        <li class="ref-item" id="fn4"><span class="ref-num">[4]</span><a href="https://www.e-flux.com/architecture/technoecologies/6783013/the-sysadmin-state-on-the-politics-of-digital-trust-and-security" target="_blank">e-flux — "The Sysadmin State"</a></li>
+        <li class="ref-item" id="fn5"><span class="ref-num">[5]</span><a href="https://www.brownadvisory.com/intl/insights/data-center-balancing-act-powering-sustainable-ai-growth" target="_blank">Brown Advisory — "Data Center Balancing Act"</a></li>
+        <li class="ref-item" id="fn6"><span class="ref-num">[6]</span><a href="https://www.theguardian.com/news/2018/mar/17/cambridge-analytica-facebook-influence-us-election" target="_blank">The Guardian — Cambridge Analytica (17 March 2018)</a></li>
+        <li class="ref-item" id="fn7"><span class="ref-num">[7]</span><a href="https://www.bbc.co.uk/news/articles/c3dr91z0g4zo" target="_blank">BBC News — Google $425m privacy lawsuit</a></li>
+        <li class="ref-item" id="fn8"><span class="ref-num">[8]</span><a href="https://www.bbc.co.uk/news/articles/c4g38jv8zzwo" target="_blank">BBC News — Google $68m Google Assistant settlement</a></li>
         <li class="ref-item" id="fn9"><span class="ref-num">[9]</span>Han, B.-C. (2017). <em>Psychopolitics: Neoliberalism and New Technologies of Power</em>. Verso Books.</li>
-        <li class="ref-item" id="fn10"><span class="ref-num">[10]</span><a href="https://patents.google.com/patent/US8689108B1/en?assignee=Palantir+Technologies+Inc." target="_blank">Google Patents &mdash; US8689108B1, Palantir Technologies Inc.</a></li>
-        <li class="ref-item" id="fn11"><span class="ref-num">[11]</span><a href="https://www.newstatesman.com/politics/2025/09/inside-the-tony-blair-institute" target="_blank">New Statesman &mdash; "Inside the Tony Blair Institute" (September 2025)</a></li>
-        <li class="ref-item" id="fn12"><span class="ref-num">[12]</span><a href="https://www.thetimes.com/business/technology/article/tony-blair-helps-billionaire-larry-ellison-open-oxford-institute-r2fmlkmhx" target="_blank">The Times &mdash; Tony Blair helps Larry Ellison open Oxford Institute</a></li>
-        <li class="ref-item" id="fn13"><span class="ref-num">[13]</span><a href="https://labourlist.org/2025/12/shabana-mahmood-tony-blair-resilience-faith-public-service/" target="_blank">LabourList &mdash; Shabana Mahmood &amp; Tony Blair (December 2025)</a></li>
-        <li class="ref-item" id="fn14"><span class="ref-num">[14]</span><a href="https://www.thenational.scot/news/25780001.shabana-mahmood-proposes-ai-panopticon-system-state-surveillance/" target="_blank">The National &mdash; Mahmood proposes AI Panopticon</a></li>
-        <li class="ref-item" id="fn15"><span class="ref-num">[15]</span><a href="https://www.turing.ac.uk/news/publications/understanding-bias-facial-recognition-technologies" target="_blank">Alan Turing Institute &mdash; Bias in Facial Recognition Technologies</a></li>
-        <li class="ref-item" id="fn16"><span class="ref-num">[16]</span><a href="https://bigbrotherwatch.org.uk/campaigns/stop-facial-recognition/" target="_blank">Big Brother Watch &mdash; Stop Facial Recognition</a></li>
-        <li class="ref-item" id="fn17"><span class="ref-num">[17]</span><a href="https://www.theguardian.com/society/2026/feb/12/nhs-deal-with-ai-firm-palantir-called-into-question-after-officials-concerns-revealed" target="_blank">The Guardian &mdash; NHS deal with Palantir (12 February 2026)</a></li>
-        <li class="ref-item" id="fn18"><span class="ref-num">[18]</span><a href="https://www.theguardian.com/technology/2026/feb/25/facial-recognition-error-prompts-police-to-arrest-asian-man-for-burglary-100-miles-away" target="_blank">The Guardian &mdash; Facial recognition wrongful arrest (25 February 2026)</a></li>
-        <li class="ref-item" id="fn19"><span class="ref-num">[19]</span><a href="https://www.nytimes.com/2013/02/05/opinion/brooks-the-philosophy-of-data.html" target="_blank">The New York Times &mdash; Brooks, D., "The Philosophy of Data" (2013)</a></li>
-        <li class="ref-item" id="fn20"><span class="ref-num">[20]</span><a href="https://patents.google.com/patent/US10572649B2/en?q=(oracle+corp)+data+center&assignee=Oracle+International+Corporation" target="_blank">Google Patents &mdash; US10572649B2, Oracle International Corporation</a></li>
-        <li class="ref-item" id="fn21"><span class="ref-num">[21]</span><a href="https://www.dezeen.com/2017/11/21/benthem-crouwel-stripy-tower-moat-amsterdam-data-centre-architecture-netherlands/" target="_blank">Dezeen &mdash; Benthem Crouwel Amsterdam Data Centre (2017)</a></li>
-        <li class="ref-item" id="fn22"><span class="ref-num">[22]</span><a href="https://aql.com/about/salem-chapel-heritage/" target="_blank">aql &mdash; Salem Chapel Heritage</a></li>
+        <li class="ref-item" id="fn10"><span class="ref-num">[10]</span><a href="https://patents.google.com/patent/US8689108B1/en?assignee=Palantir+Technologies+Inc." target="_blank">Google Patents — US8689108B1, Palantir Technologies Inc.</a></li>
+        <li class="ref-item" id="fn11"><span class="ref-num">[11]</span><a href="https://www.newstatesman.com/politics/2025/09/inside-the-tony-blair-institute" target="_blank">New Statesman — "Inside the Tony Blair Institute" (September 2025)</a></li>
+        <li class="ref-item" id="fn12"><span class="ref-num">[12]</span><a href="https://www.thetimes.com/business/technology/article/tony-blair-helps-billionaire-larry-ellison-open-oxford-institute-r2fmlkmhx" target="_blank">The Times — Tony Blair helps Larry Ellison open Oxford Institute</a></li>
+        <li class="ref-item" id="fn13"><span class="ref-num">[13]</span><a href="https://labourlist.org/2025/12/shabana-mahmood-tony-blair-resilience-faith-public-service/" target="_blank">LabourList — Shabana Mahmood &amp; Tony Blair (December 2025)</a></li>
+        <li class="ref-item" id="fn14"><span class="ref-num">[14]</span><a href="https://www.thenational.scot/news/25780001.shabana-mahmood-proposes-ai-panopticon-system-state-surveillance/" target="_blank">The National — Mahmood proposes AI Panopticon</a></li>
+        <li class="ref-item" id="fn15"><span class="ref-num">[15]</span><a href="https://www.turing.ac.uk/news/publications/understanding-bias-facial-recognition-technologies" target="_blank">Alan Turing Institute — Bias in Facial Recognition Technologies</a></li>
+        <li class="ref-item" id="fn16"><span class="ref-num">[16]</span><a href="https://bigbrotherwatch.org.uk/campaigns/stop-facial-recognition/" target="_blank">Big Brother Watch — Stop Facial Recognition</a></li>
+        <li class="ref-item" id="fn17"><span class="ref-num">[17]</span><a href="https://www.theguardian.com/society/2026/feb/12/nhs-deal-with-ai-firm-palantir-called-into-question-after-officials-concerns-revealed" target="_blank">The Guardian — NHS deal with Palantir (12 February 2026)</a></li>
+        <li class="ref-item" id="fn18"><span class="ref-num">[18]</span><a href="https://www.theguardian.com/technology/2026/feb/25/facial-recognition-error-prompts-police-to-arrest-asian-man-for-burglary-100-miles-away" target="_blank">The Guardian — Facial recognition wrongful arrest (25 February 2026)</a></li>
+        <li class="ref-item" id="fn19"><span class="ref-num">[19]</span><a href="https://www.nytimes.com/2013/02/05/opinion/brooks-the-philosophy-of-data.html" target="_blank">The New York Times — Brooks, D., "The Philosophy of Data" (2013)</a></li>
+        <li class="ref-item" id="fn20"><span class="ref-num">[20]</span><a href="https://patents.google.com/patent/US10572649B2/en?q=(oracle+corp)+data+center&assignee=Oracle+International+Corporation" target="_blank">Google Patents — US10572649B2, Oracle International Corporation</a></li>
+        <li class="ref-item" id="fn21"><span class="ref-num">[21]</span><a href="https://www.dezeen.com/2017/11/21/benthem-crouwel-stripy-tower-moat-amsterdam-data-centre-architecture-netherlands/" target="_blank">Dezeen — Benthem Crouwel Amsterdam Data Centre (2017)</a></li>
+        <li class="ref-item" id="fn22"><span class="ref-num">[22]</span><a href="https://aql.com/about/salem-chapel-heritage/" target="_blank">aql — Salem Chapel Heritage</a></li>
         <li class="ref-item" id="fn23"><span class="ref-num">[23]</span>Adorno, T. W. &amp; Horkheimer, M. (1944/2002). <em>Dialectic of Enlightenment: Philosophical Fragments</em>. Stanford University Press.</li>
       </ul>
     </div>
+  </aside>
 
-  </main>
 </div>
 
 <script>
