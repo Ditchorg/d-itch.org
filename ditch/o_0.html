@@ -31,7 +31,6 @@
       line-height: 1.5;
       -webkit-font-smoothing: antialiased;
       min-height: 100vh;
-      padding-right: 56px; /* space for music sidebar */
     }
     a {
       color: var(--text);
@@ -71,21 +70,21 @@
       text-decoration: none;
     }
 
-    /* ── MUSIC SIDEBAR ── full viewport height */
+    /* ── MUSIC SIDEBAR ── grid column separator ── */
     .music-sidebar {
-      position: fixed;
+      position: sticky;
       top: 0;
-      right: 0;
-      width: 56px;
+      width: 80px;
       height: 100vh;
       border-left: 1px solid var(--border);
+      border-right: 1px solid var(--border);
       background: var(--bg);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: space-between;
       padding: 32px 0;
-      z-index: 20;
+      align-self: start;
     }
     .music-label {
       font-size: 9px;
@@ -114,12 +113,12 @@
       font-size: 8px;
     }
     .music-track-info {
-      writing-mode: vertical-rl;
-      text-orientation: mixed;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 10px;
+      gap: 4px;
+      text-align: center;
+      padding: 0 8px;
     }
     .music-track-name {
       font-size: 12px;
@@ -150,11 +149,11 @@
     .music-time {
       font-size: 9px;
       color: var(--muted);
-      writing-mode: vertical-rl;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 4px;
       align-items: center;
+      text-align: center;
     }
 
     /* ── HEADER ── */
@@ -179,7 +178,7 @@
     /* ── LAYOUT ── */
     .body-grid {
       display: grid;
-      grid-template-columns: 1fr 3fr 1.2fr;
+      grid-template-columns: 1fr 3fr 80px 1.2fr;
       min-height: calc(100vh - 200px);
     }
 
@@ -458,12 +457,7 @@
       .content {
         padding: 32px 24px 0 24px;
       }
-      .music-sidebar {
-        display: none;
-      }
-      body {
-        padding-right: 0;
-      }
+      .music-sidebar { display: none; }
       .cover-banner .credit {
         font-size: 9px;
         margin-top: 5px;
@@ -484,26 +478,6 @@
   </style>
 </head>
 <body>
-
-  <!-- ── VERTICAL MUSIC SIDEBAR ── full height, fixed -->
-  <div class="music-sidebar">
-    <span class="music-label">Listening</span>
-    <audio id="audio" src="https://archive.org/download/on-opitmization....-2/On%20Opitmization....%20%282%29.mp3"></audio>
-    <div class="music-progress-bar" id="prog" onclick="seek(event)">
-      <div class="music-progress-fill" id="fill"></div>
-    </div>
-    <div class="music-track-info">
-      <span class="music-track-name">On_Optimization</span>
-      <span class="music-track-artist">D-itch 2026</span>
-    </div>
-    <div class="music-time">
-      <span id="time">0:00</span>
-      <span>4:56</span>
-    </div>
-    <button class="music-btn" id="mbtn" onclick="togglePlay()">
-      <span class="play-sym" id="msym">▶</span>
-    </button>
-  </div>
 
   <header class="site-header">
     <a href="index.html"><span class="site-name">D-itch</span></a>
@@ -787,6 +761,25 @@
 
       </div>
     </main>
+
+    <!-- ── MUSIC SIDEBAR — separator column ── -->
+    <div class="music-sidebar">
+      <div class="music-track-info">
+        <span class="music-track-name">On_Optimization</span>
+        <span class="music-track-artist">D-itch 2026</span>
+      </div>
+      <button class="music-btn" id="mbtn" onclick="togglePlay()">
+        <span class="play-sym" id="msym">&#9654;</span>
+      </button>
+      <audio id="audio" src="https://archive.org/download/on-opitmization....-2/On%20Opitmization....%20%282%29.mp3"></audio>
+      <div class="music-progress-bar" id="prog" onclick="seek(event)">
+        <div class="music-progress-fill" id="fill"></div>
+      </div>
+      <div class="music-time">
+        <span id="time">0:00</span>
+        <span>4:56</span>
+      </div>
+    </div>
 
     <!-- RIGHT REFERENCES SIDEBAR (sticky) -->
     <aside class="ref-sidebar">
